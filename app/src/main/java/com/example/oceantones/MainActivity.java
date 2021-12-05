@@ -314,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Log.e("imu",event.values[0]+","+Constants.sensorFlag);
+//        Log.e("imu",event.values[0]+","+Constants.sensorFlag);
         if (Constants.sensorFlag && Constants.imu) {
             if (event.sensor.equals(accelerometer)) {
                 Constants.acc.add(event.values[0]+","+event.values[1]+","+event.values[2]+"\n");
@@ -335,51 +335,63 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         String bigts="";
         if (Constants.file_num==8) {
-            Constants.pulse = SendChirpAsyncTask.continuouspulse(
-                    1, 1000,
-                    5000, .5,
-                    Constants.SamplingRate,
-                    Constants.scale1);
-            tv2.setText("chirp 1s (1-5khz)");
-            Constants.sp1 = new AudioSpeaker(this, Constants.pulse, 48000, 0, 0);
-            Constants.sp1.play(1);
+//            Constants.pulse = SendChirpAsyncTask.continuouspulse(
+//                    1, 1000,
+//                    5000, .5,
+//                    Constants.SamplingRate,
+//                    Constants.scale1);
+//            tv2.setText("chirp 1s (1-5khz)");
+//            Constants.sp1 = new AudioSpeaker(this, Constants.pulse, 48000, 0, 0);
+//            Constants.sp1.play(1);
+//
+//            try {
+//                Thread.sleep(2000);
+//            }
+//            catch(Exception e) {
+//                Log.e("asdf",e.getMessage());
+//            }
+//
+//            for (int i = 0; i < 1; i++) {
+//                try {
+//                    while (Constants.writing) {
+//                        Thread.sleep(100);
+//                    }
+//                    Constants.acc = new LinkedList<>();
+//                    Constants.gyro = new LinkedList<>();
+//
+//                    Constants.file_num = 9 + i;
+//                    Constants.setTones(tv2, this);
+//                    String ts = System.currentTimeMillis() + "";
+//                    Constants.ts = ts;
+//                    String trim = ts.substring(ts.length() - 4, ts.length());
+//                    bigts += trim + "\n";
+//
+//                    if (i == 0) {
+//                        task = new SendChirpAsyncTask(this, ts, tv2, tv3, true);
+//                    } else {
+//                        task = new SendChirpAsyncTask(this, ts, tv2, tv3, false);
+//                    }
+//                    task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR).get();
+//                    Thread.sleep(1000);
+//                }
+//                catch(Exception e) {
+//                    Log.e("asdf",e.getMessage());
+//                }
+//                Log.e("asdf","NEXT");
+//            }
+//            Constants.file_num=8;
 
-            try {
-                Thread.sleep(2000);
+            String longts="";
+            for (int i = 0; i < 8; i++) {
+                String ts = System.currentTimeMillis() + (i+1) + "";
+                longts+=ts+"\n";
+                Constants.ts = ts;
+                String trim = ts.substring(ts.length() - 4, ts.length());
+                bigts += trim + "\n";
             }
-            catch(Exception e) {
-                Log.e("asdf",e.getMessage());
-            }
 
-            for (int i = 0; i < 1; i++) {
-                try {
-                    while (Constants.writing) {
-                        Thread.sleep(100);
-                    }
-                    Constants.acc = new LinkedList<>();
-                    Constants.gyro = new LinkedList<>();
-
-                    Constants.file_num = 9 + i;
-                    Constants.setTones(tv2, this);
-                    String ts = System.currentTimeMillis() + "";
-                    Constants.ts = ts;
-                    String trim = ts.substring(ts.length() - 4, ts.length());
-                    bigts += trim + "\n";
-
-                    if (i == 0) {
-                        task = new SendChirpAsyncTask(this, ts, tv2, tv3, true);
-                    } else {
-                        task = new SendChirpAsyncTask(this, ts, tv2, tv3, false);
-                    }
-                    task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR).get();
-                    Thread.sleep(1000);
-                }
-                catch(Exception e) {
-                    Log.e("asdf",e.getMessage());
-                }
-                Log.e("asdf","NEXT");
-            }
-            Constants.file_num=8;
+            task = new SendChirpAsyncTask(this, longts, tv2, tv3, true);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         else {
             String ts = System.currentTimeMillis() + "";

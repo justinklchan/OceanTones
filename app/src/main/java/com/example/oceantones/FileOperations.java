@@ -41,6 +41,7 @@ public class FileOperations {
     }
 
     public static void writetofile(String _ExternalFilesDir, short[] buff, String filename) {
+        Constants.writing=true;
         Log.e("asdf","writetofile " + filename);
         long ts = System.currentTimeMillis();
 
@@ -68,6 +69,7 @@ public class FileOperations {
 
     public static void writeSensors(Activity av, String filename) {
 //        if (Constants.imu) {
+        Constants.writing=true;
             long ts = System.currentTimeMillis();
             Log.e("asdf","writing sensors "+Constants.acc.size()+","+Constants.gyro.size());
 

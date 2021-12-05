@@ -32,8 +32,6 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         Log.e("asdf","preexec "+ts);
         Constants.disableUI();
         num_tones = Constants.tones.length;
-        Constants.sensorFlag=true;
-        Constants.writing=true;
     }
 
     public static short[] preamble2() {
@@ -154,6 +152,10 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
 
 //        if (Constants.file_num >= 1 && Constants.file_num <= 5) {
         if (Constants.mode.equals("tone")) {
+            Constants.acc = new LinkedList<>();
+            Constants.gyro = new LinkedList<>();
+            Constants.sensorFlag=true;
+
             int preamble_len=9600;
 
             int preamble_length=(int)Math.ceil(preamble_len+(Constants.gap_len*Constants.SamplingRate));
@@ -246,38 +248,67 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
             Log.e("asdf", "done sleeping");
         }
         else if (Constants.mode.equals("mp")) {
-            int pulse_length = Constants.tone_len*Constants.SamplingRate;
-            int record_length = (Constants.init_sleep*Constants.SamplingRate)+pulse_length;
-            Log.e("asdf","RECORD "+record_length);
-            Constants._OfflineRecorder = new OfflineRecorder(av, Constants.SamplingRate, record_length, ts);
-            Log.e("asdf","STATE "+Constants._OfflineRecorder.getState()+","+Constants._OfflineRecorder.rec.getRecordingState());
-            Constants._OfflineRecorder.start();
-
-            Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 0);
-
-            if (initSleep) {
-                Log.e("asdf", "init sleep");
-                try {
-                    Thread.sleep((long) (Constants.init_sleep * 1000));
-                } catch (Exception e) {
-                    Log.e("asdf", e.getMessage());
+            if (Constants.file_num==8) {
+                String[] tsi = ts.split("\n");
+                for (int i = 0; i < tsi.length; i++) {
+                    try {
+                        while (Constants.writing) {
+                            Thread.sleep(100);
+                        }
+                    }
+                    catch(Exception e) {
+                        Log.e("asdf",e.getMessage());
+                    }
+                    Constants.file_num = 9 + i;
+                    Constants.setTones(tv, av);
+                    Constants.ts = tsi[i];
+                    mphelper();
                 }
+                Constants.file_num = 8;
             }
-
-            if (Constants.transmit) {
-                Constants.sp1.play(Constants.scale2);
+            else {
+                mphelper();
             }
+        }
+        return null;
+    }
 
+    public void mphelper() {
+        Log.e("asdf","mphelper");
+        Constants.acc = new LinkedList<>();
+        Constants.gyro = new LinkedList<>();
+        Constants.sensorFlag=true;
+
+        int pulse_length = Constants.tone_len*Constants.SamplingRate;
+        int record_length = (Constants.init_sleep*Constants.SamplingRate)+pulse_length;
+        Log.e("asdf","RECORD "+record_length);
+        Constants._OfflineRecorder = new OfflineRecorder(av, Constants.SamplingRate, record_length, Constants.ts);
+        Log.e("asdf","STATE "+Constants._OfflineRecorder.getState()+","+Constants._OfflineRecorder.rec.getRecordingState());
+        Constants._OfflineRecorder.start();
+
+        Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 0);
+
+        if (initSleep) {
+            Log.e("asdf", "init sleep");
             try {
-                int stime = (record_length/Constants.SamplingRate)*1000;
-                Log.e("asdf", "sleep for " + stime);
-                Thread.sleep((long) stime);
+                Thread.sleep((long) (Constants.init_sleep * 1000));
             } catch (Exception e) {
                 Log.e("asdf", e.getMessage());
             }
-            Constants.sp1.reset();
-            Constants.sp1 = null;
         }
-        return null;
+
+        if (Constants.transmit) {
+            Constants.sp1.play(Constants.scale2);
+        }
+
+        try {
+            int stime = (record_length/Constants.SamplingRate)*1000;
+            Log.e("asdf", "sleep for " + stime);
+            Thread.sleep((long) stime);
+        } catch (Exception e) {
+            Log.e("asdf", e.getMessage());
+        }
+        Constants.sp1.reset();
+        Constants.sp1 = null;
     }
 }

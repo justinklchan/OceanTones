@@ -148,7 +148,13 @@ public class Constants {
                         5000, Constants.gap_len,
                         Constants.SamplingRate,
                         Constants.scale1);
-                tv2.setText("chirp 50ms (1-5khz)");
+
+                ((MainActivity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv2.setText("chirp 50ms (1-5khz)");
+                    }
+                });
                 Constants.mode="mp";
             }
             else if (Constants.file_num==10) {
@@ -157,7 +163,13 @@ public class Constants {
                         5000, Constants.gap_len,
                         Constants.SamplingRate,
                         Constants.scale1);
-                tv2.setText("chirp 500ms (1-5khz)");
+
+                ((MainActivity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv2.setText("chirp 500ms (1-5khz)");
+                    }
+                });
                 Constants.mode="mp";
             }
             else if (Constants.file_num==11) {
@@ -166,7 +178,13 @@ public class Constants {
                         5000, Constants.gap_len,
                         Constants.SamplingRate,
                         Constants.scale1);
-                tv2.setText("chirp 1s (1-5khz)");
+
+                ((MainActivity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv2.setText("chirp 1s (1-5khz)");
+                    }
+                });
                 Constants.mode="mp";
             }
 //            else if (Constants.file_num==11) {
@@ -182,7 +200,12 @@ public class Constants {
                 for (int i = 0; i < sig.length; i++) {
                     Constants.pulse[cc++]=sig[i];
                 }
-                tv2.setText("barker (312 samples)");
+                ((MainActivity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv2.setText("barker (312 samples)");
+                    }
+                });
                 Constants.mode="mp";
             }
             else if (Constants.file_num==13) {
@@ -194,7 +217,12 @@ public class Constants {
                     Constants.pulse[cc++]=sig[i];
                 }
 
-                tv2.setText("barker (624 samples)");
+                ((MainActivity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv2.setText("barker (624 samples)");
+                    }
+                });
                 Constants.mode="mp";
             }
             else if (Constants.file_num==14) {
@@ -205,7 +233,12 @@ public class Constants {
                 for (int i = 0; i < sig.length; i++) {
                     Constants.pulse[cc++]=sig[i];
                 }
-                tv2.setText("zadoff-chu (50ms)");
+                ((MainActivity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv2.setText("zadoff-chu (50ms)");
+                    }
+                });
                 Constants.mode="mp";
             }
             else if (Constants.file_num==15) {
@@ -216,7 +249,12 @@ public class Constants {
                 for (int i = 0; i < sig.length; i++) {
                     Constants.pulse[cc++]=sig[i];
                 }
-                tv2.setText("zadoff-chu (500ms)");
+                ((MainActivity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv2.setText("zadoff-chu (500ms)");
+                    }
+                });
                 Constants.mode="mp";
             }
             else if (Constants.file_num==17) {
@@ -227,7 +265,12 @@ public class Constants {
                 for (int i = 0; i < sig.length; i++) {
                     Constants.pulse[cc++]=sig[i];
                 }
-                tv2.setText("zadoff-chu (1s)");
+                ((MainActivity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv2.setText("zadoff-chu (1s)");
+                    }
+                });
                 Constants.mode="mp";
             }
         }
