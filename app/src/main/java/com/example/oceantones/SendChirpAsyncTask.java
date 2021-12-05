@@ -25,6 +25,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         this.initSleep = initSleep;
     }
 
+    long taskts;
     int num_tones=0;
     @Override
     protected void onPreExecute() {
@@ -32,6 +33,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         Log.e("asdf","preexec "+ts);
         Constants.disableUI();
         num_tones = Constants.tones.length;
+        taskts=System.currentTimeMillis();
     }
 
     public static short[] preamble2() {
@@ -105,12 +107,11 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void unused) {
         super.onPostExecute(unused);
-        Log.e("asdf","postexec "+ts);
+        Log.e("asdf","postexec "+(System.currentTimeMillis()-taskts));
 
         Constants.enableUI();
 
         Constants.sp1=null;
-        Log.e("asdf","RECORDER NULL");
         Constants._OfflineRecorder = null;
     }
 
@@ -252,15 +253,16 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
                 String[] tsi = ts.split("\n");
                 for (int i = 0; i < tsi.length; i++) {
                     try {
-                        while (Constants.writing) {
-                            Thread.sleep(100);
-                        }
+//                        while (Constants.writing) {
+                            Thread.sleep(1000);
+//                        }
                     }
                     catch(Exception e) {
                         Log.e("asdf",e.getMessage());
                     }
                     Constants.file_num = 9 + i;
                     Constants.setTones(tv, av);
+                    Constants.setTones(tv2, av);
                     Constants.ts = tsi[i];
                     mphelper();
                 }

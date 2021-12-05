@@ -257,7 +257,7 @@ public class Constants {
                 });
                 Constants.mode="mp";
             }
-            else if (Constants.file_num==17) {
+            else if (Constants.file_num==16) {
                 short[] sig= FileOperations.readrawasset(context, R.raw.zc3);
 
                 Constants.pulse = new short[sig.length+(int)(Constants.gap_len*Constants.SamplingRate)];

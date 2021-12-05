@@ -382,8 +382,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //            Constants.file_num=8;
 
             String longts="";
+            long ts1=System.currentTimeMillis();
             for (int i = 0; i < 8; i++) {
-                String ts = System.currentTimeMillis() + (i+1) + "";
+                String ts = ts1 + (i+1) + "";
                 longts+=ts+"\n";
                 Constants.ts = ts;
                 String trim = ts.substring(ts.length() - 4, ts.length());
