@@ -32,7 +32,7 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     TextView tv1,tv2,tv3;
 
-    private SensorManager sensorManager;
+    private static SensorManager sensorManager;
     private Sensor accelerometer;
     private Sensor gyroscope;
 
@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Constants.init(this);
         Constants.setTones(tv2,this);
 
-//        Constants.et2.setEnabled(false);
-//        Constants.et3.setEnabled(false);
+        Constants.et2.setEnabled(false);
+        Constants.et3.setEnabled(false);
         Constants.et7.setEnabled(false);
 
         String[] perms = new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
@@ -331,6 +331,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void onstarthelper() {
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_FASTEST);
+
         Log.e("asdf", "onstart");
 
         String bigts="";
@@ -391,7 +394,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 bigts += trim + "\n";
             }
 
-            task = new SendChirpAsyncTask(this, longts, tv2, tv3, true);
+            task = new SendChirpAsyncTask(this, longts, tv2, tv3);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         else {
@@ -400,16 +403,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             String trim = ts.substring(ts.length() - 4, ts.length());
             bigts+=trim+"\n";
 
-            task = new SendChirpAsyncTask(this, ts, tv2, tv3, true);
+            task = new SendChirpAsyncTask(this, ts, tv2, tv3);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         tv1.setText(bigts);
     }
 
     public void onstop(View v) {
+        sensorManager.unregisterListener(this);
+
         Log.e("asdf","onstop");
         Constants.sensorFlag=false;
-        FileOperations.writeSensors(this,Constants.ts);
+        if (Constants.acc != null && Constants.acc.size() > 0) {
+            FileOperations.writeSensors(this, Constants.ts);
+        }
         task.cancel(true);
         if (Constants._OfflineRecorder!=null) {
             Constants._OfflineRecorder.halt();
@@ -418,6 +425,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             Constants.sp1.pause();
         }
         Constants.enableUI();
+
+        if (Integer.parseInt(Constants.et1.getText().toString()) == 8) {
+            Constants.file_num=8;
+            Constants.setTones(tv2,this);
+        }
     }
 
     @Override
@@ -432,5 +444,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
+    }
+
+    public static void unreg(Activity av) {
+        sensorManager.unregisterListener((MainActivity)av);
     }
 }

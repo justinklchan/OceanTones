@@ -16,13 +16,12 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
     String ts;
     TextView tv;
     TextView tv2;
-    boolean initSleep;
-    public SendChirpAsyncTask(Activity activity, String ts, TextView tv, TextView tv2, boolean initSleep) {
+
+    public SendChirpAsyncTask(Activity activity, String ts, TextView tv, TextView tv2) {
         this.av = activity;
         this.ts = ts;
         this.tv = tv;
         this.tv2 = tv2;
-        this.initSleep = initSleep;
     }
 
     long taskts;
@@ -107,6 +106,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void unused) {
         super.onPostExecute(unused);
+        MainActivity.unreg(av);
         Log.e("asdf","postexec "+(System.currentTimeMillis()-taskts));
 
         Constants.enableUI();
@@ -166,9 +166,9 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
 
             int init_sleep_length = Constants.init_sleep * Constants.SamplingRate;
             int record_length = (int)Math.ceil(preamble_length+all_tone_length);
-            if (initSleep) {
+//            if (initSleep) {
                 record_length = (int)Math.ceil(init_sleep_length+preamble_length+all_tone_length);
-            }
+//            }
             int slackTime = 2 * Constants.SamplingRate;
             record_length += slackTime;
 
@@ -178,7 +178,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
             short[] preamble = preamble();
 //            String aa=Arrays.toString(preamble);
 
-            if (initSleep) {
+//            if (initSleep) {
                 //INIT
                 Log.e("asdf", "init sleep");
                 try {
@@ -186,7 +186,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
                 } catch (Exception e) {
                     Log.e("asdf", e.getMessage());
                 }
-            }
+//            }
 
             // PULSE
             for (int i = 0; i < Constants.tones.length; i++) {
@@ -264,25 +264,81 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
                     Constants.setTones(tv, av);
                     Constants.setTones(tv2, av);
                     Constants.ts = tsi[i];
-                    mphelper();
+                    if (i==0) {
+                        mphelper(true);
+                    }
+                    else {
+                        mphelper(false);
+                    }
                 }
                 Constants.file_num = 8;
+                Constants.setTones(tv, av);
             }
             else {
-                mphelper();
+                mphelper(true);
             }
+        }
+        else if (Constants.mode.equals("ofdm")) {
+            ofdmhelper(true);
         }
         return null;
     }
 
-    public void mphelper() {
+    public void ofdmhelper(boolean initSleep) {
         Log.e("asdf","mphelper");
         Constants.acc = new LinkedList<>();
         Constants.gyro = new LinkedList<>();
         Constants.sensorFlag=true;
 
         int pulse_length = Constants.tone_len*Constants.SamplingRate;
-        int record_length = (Constants.init_sleep*Constants.SamplingRate)+pulse_length;
+        int record_length = pulse_length;
+        if (initSleep) {
+            record_length += (Constants.init_sleep*Constants.SamplingRate);
+        }
+
+        Log.e("asdf","RECORD "+record_length);
+        Constants._OfflineRecorder = new OfflineRecorder(av, Constants.SamplingRate, record_length, Constants.ts);
+        Log.e("asdf","STATE "+Constants._OfflineRecorder.getState()+","+Constants._OfflineRecorder.rec.getRecordingState());
+        Constants._OfflineRecorder.start();
+
+        Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, 0, 0);
+
+        if (initSleep) {
+            Log.e("asdf", "init sleep");
+            try {
+                Thread.sleep((long) (Constants.init_sleep * 1000));
+            } catch (Exception e) {
+                Log.e("asdf", e.getMessage());
+            }
+        }
+
+        if (Constants.transmit) {
+            Constants.sp1.play(Constants.scale2);
+        }
+
+        try {
+            int stime = (pulse_length/Constants.SamplingRate)*1000;
+            Log.e("asdf", "sleep for " + stime);
+            Thread.sleep((long) stime);
+        } catch (Exception e) {
+            Log.e("asdf", e.getMessage());
+        }
+        Constants.sp1.reset();
+        Constants.sp1 = null;
+    }
+
+    public void mphelper(boolean initSleep) {
+        Log.e("asdf","mphelper");
+        Constants.acc = new LinkedList<>();
+        Constants.gyro = new LinkedList<>();
+        Constants.sensorFlag=true;
+
+        int pulse_length = Constants.tone_len*Constants.SamplingRate;
+        int record_length = pulse_length;
+        if (initSleep) {
+            record_length += (Constants.init_sleep*Constants.SamplingRate);
+        }
+
         Log.e("asdf","RECORD "+record_length);
         Constants._OfflineRecorder = new OfflineRecorder(av, Constants.SamplingRate, record_length, Constants.ts);
         Log.e("asdf","STATE "+Constants._OfflineRecorder.getState()+","+Constants._OfflineRecorder.rec.getRecordingState());
@@ -304,7 +360,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         }
 
         try {
-            int stime = (record_length/Constants.SamplingRate)*1000;
+            int stime = (pulse_length/Constants.SamplingRate)*1000;
             Log.e("asdf", "sleep for " + stime);
             Thread.sleep((long) stime);
         } catch (Exception e) {

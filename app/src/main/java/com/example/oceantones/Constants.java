@@ -16,8 +16,8 @@ public class Constants {
     public static OfflineRecorder _OfflineRecorder;
     public static EditText et1,et2,et3,et4,et5,et6,et7;
     public static Button startb, stopb;
-    public static float scale1=.01f,scale2=.01f,gap_len=.5f;
-    public static int file_num=4,init_sleep=5,tone_len=5,freq_lim=3000;
+    public static float scale1=1f,scale2=1f,gap_len=.5f;
+    public static int file_num=4,init_sleep=5,tone_len=5,freq_lim=18000;
     public static boolean transmit=true;
     public static boolean stereo=true;
     public static boolean imu=true;
@@ -84,8 +84,8 @@ public class Constants {
         Constants.sw3.setEnabled(true);
 
         Constants.et1.setEnabled(true);
-        Constants.et2.setEnabled(true);
-        Constants.et3.setEnabled(true);
+//        Constants.et2.setEnabled(true);
+//        Constants.et3.setEnabled(true);
         Constants.et4.setEnabled(true);
         Constants.et5.setEnabled(true);
         Constants.et6.setEnabled(true);
@@ -102,7 +102,7 @@ public class Constants {
             } else if (Constants.file_num == 3) {
                 Constants.tones = new int[]{50, 100, 150, 200, 350, 500};
             } else if (Constants.file_num == 4) {
-                Constants.tones = new int[]{200};
+                Constants.tones = new int[]{1500};
             } else if (Constants.file_num == 5) {
                 Constants.tones = new int[]{500, 1000};
             }
@@ -141,6 +141,8 @@ public class Constants {
             else if (Constants.file_num==8) {
                 tv2.setText("multipath (multiple signals)");
                 Constants.mode="mp";
+                Constants.scale1=1;
+                Constants.scale2=1;
             }
             else if (Constants.file_num==9) {
                 Constants.pulse = SendChirpAsyncTask.continuouspulse(
@@ -187,11 +189,6 @@ public class Constants {
                 });
                 Constants.mode="mp";
             }
-//            else if (Constants.file_num==11) {
-//                Constants.pulse = SendChirpAsyncTask.preamble2();
-//                tv2.setText("upchirp/downchirp 1+1s (1-5khz)");
-//                Constants.mode="mp";
-//            }
             else if (Constants.file_num==12) {
                 short[] sig = FileOperations.readrawasset(context, R.raw.barker);
 
@@ -272,6 +269,31 @@ public class Constants {
                     }
                 });
                 Constants.mode="mp";
+            }
+            else if (Constants.file_num==17) {
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm1);
+                tv2.setText("ofdm1");
+                Constants.mode="ofdm";
+            }
+            else if (Constants.file_num==18) {
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm2);
+                tv2.setText("ofdm2");
+                Constants.mode="ofdm";
+            }
+            else if (Constants.file_num==19) {
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm3);
+                tv2.setText("ofdm3");
+                Constants.mode="ofdm";
+            }
+            else if (Constants.file_num==20) {
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm4);
+                tv2.setText("ofdm4");
+                Constants.mode="ofdm";
+            }
+            else if (Constants.file_num==21) {
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm5);
+                tv2.setText("ofdm5");
+                Constants.mode="ofdm";
             }
         }
     }
