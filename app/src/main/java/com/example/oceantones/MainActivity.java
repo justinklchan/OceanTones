@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Constants.init(this);
         Constants.setTones(tv2,this);
 
-        Constants.et2.setEnabled(false);
-        Constants.et3.setEnabled(false);
+//        Constants.et2.setEnabled(false);
+//        Constants.et3.setEnabled(false);
         Constants.et7.setEnabled(false);
 
         String[] perms = new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};

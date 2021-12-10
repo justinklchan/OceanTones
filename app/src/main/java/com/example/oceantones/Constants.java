@@ -84,8 +84,8 @@ public class Constants {
         Constants.sw3.setEnabled(true);
 
         Constants.et1.setEnabled(true);
-//        Constants.et2.setEnabled(true);
-//        Constants.et3.setEnabled(true);
+        Constants.et2.setEnabled(true);
+        Constants.et3.setEnabled(true);
         Constants.et4.setEnabled(true);
         Constants.et5.setEnabled(true);
         Constants.et6.setEnabled(true);
@@ -147,7 +147,7 @@ public class Constants {
             else if (Constants.file_num==9) {
                 Constants.pulse = SendChirpAsyncTask.continuouspulse(
                         .05, 1000,
-                        5000, Constants.gap_len,
+                        10000, Constants.gap_len,
                         Constants.SamplingRate,
                         Constants.scale1);
 
@@ -162,7 +162,7 @@ public class Constants {
             else if (Constants.file_num==10) {
                 Constants.pulse = SendChirpAsyncTask.continuouspulse(
                         .5, 1000,
-                        5000, Constants.gap_len,
+                        10000, Constants.gap_len,
                         Constants.SamplingRate,
                         Constants.scale1);
 
@@ -271,30 +271,80 @@ public class Constants {
                 Constants.mode="mp";
             }
             else if (Constants.file_num==17) {
-                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm1);
-                tv2.setText("ofdm1");
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm1500);
+                tv2.setText("ofdm1500");
                 Constants.mode="ofdm";
             }
             else if (Constants.file_num==18) {
-                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm2);
-                tv2.setText("ofdm2");
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm3000);
+                tv2.setText("ofdm3000");
                 Constants.mode="ofdm";
             }
             else if (Constants.file_num==19) {
-                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm3);
-                tv2.setText("ofdm3");
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm5000);
+                tv2.setText("ofdm5000");
                 Constants.mode="ofdm";
             }
             else if (Constants.file_num==20) {
-                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm4);
-                tv2.setText("ofdm4");
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm7000);
+                tv2.setText("ofdm7000");
                 Constants.mode="ofdm";
             }
             else if (Constants.file_num==21) {
-                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm5);
-                tv2.setText("ofdm5");
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm10000);
+                tv2.setText("ofdm10000");
                 Constants.mode="ofdm";
             }
+            else if (Constants.file_num==22) {
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm_1_2);
+                tv2.setText("ofdm_1_2");
+                Constants.mode="ofdm";
+            }
+            else if (Constants.file_num==23) {
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm_2_3);
+                tv2.setText("ofdm_2_3");
+                Constants.mode="ofdm";
+            }
+            else if (Constants.file_num==24) {
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm_3_4);
+                tv2.setText("ofdm_3_4");
+                Constants.mode="ofdm";
+            }
+            else if (Constants.file_num==25) {
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm_4_5);
+                tv2.setText("ofdm_4_5");
+                Constants.mode="ofdm";
+            }
+            else if (Constants.file_num==26) {
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm_5_6);
+                tv2.setText("ofdm_5_6");
+                Constants.mode="ofdm";
+            }
+            else if (Constants.file_num==27) {
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm_zeros);
+                tv2.setText("ofdm_zeros");
+                Constants.mode="ofdm";
+            }
+            else if (Constants.file_num==28) {
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.mp_signal1);
+                tv2.setText("equalizer");
+                Constants.mode="mp";
+            }
+            else if (Constants.file_num==29) {
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm_null);
+                tv2.setText("null");
+                Constants.mode="ofdm";
+            }
+            else if (Constants.file_num==30) {
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdm_null2);
+                tv2.setText("null2");
+                Constants.mode="ofdm";
+            }
+//            else if (Constants.file_num==22) {
+//                Constants.pulse = FileOperations.readrawasset(context, R.raw.mp_signal1);
+//                tv2.setText("equalizer");
+//                Constants.mode="mp";
+//            }
         }
     }
 }
