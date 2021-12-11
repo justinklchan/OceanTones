@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Constants.et5=findViewById(R.id.editTextNumber5);
         Constants.et6=findViewById(R.id.editTextNumber6);
         Constants.et7=findViewById(R.id.editTextNumber7);
+        Constants.et8=findViewById(R.id.editTextNumber8);
         Constants.sw1=findViewById(R.id.switch1);
         Constants.sw2=findViewById(R.id.switch2);
         Constants.sw3=findViewById(R.id.switch3);
@@ -282,6 +283,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     editor.putInt("freq_lim", Integer.parseInt(ss));
                     editor.commit();
                     Constants.freq_lim = Integer.parseInt(ss);
+                }
+            }
+        });
+        Constants.et8.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(av).edit();
+                String ss = Constants.et8.getText().toString();
+                if (ss.length()>0) {
+                    editor.putInt("reps", Integer.parseInt(ss));
+                    editor.commit();
+                    Constants.reps = Integer.parseInt(ss);
                 }
             }
         });

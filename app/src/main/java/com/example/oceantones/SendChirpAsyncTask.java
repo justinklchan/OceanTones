@@ -301,7 +301,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         Log.e("asdf","STATE "+Constants._OfflineRecorder.getState()+","+Constants._OfflineRecorder.rec.getRecordingState());
         Constants._OfflineRecorder.start();
 
-        Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, 0, 0);
+        Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, Constants.reps-1, 0);
 
         if (initSleep) {
             Log.e("asdf", "init sleep");

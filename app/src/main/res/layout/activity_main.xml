@@ -181,7 +181,7 @@
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumber7" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextNumber8" />
 
     <TextView
         android:id="@+id/textView9"
@@ -210,7 +210,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="freq_lim"
-        app:layout_constraintBottom_toTopOf="@+id/textView8"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextNumber7"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextNumber6" />
 
@@ -230,4 +230,25 @@
         android:text="IMU"
         app:layout_constraintBottom_toTopOf="@+id/switch2"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="reps"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextNumber8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNumber7" />
+
+    <EditText
+        android:id="@+id/editTextNumber8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:width="100dp"
+        android:ems="10"
+        android:text="1"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="@+id/editTextNumber7"
+        app:layout_constraintStart_toStartOf="@+id/editTextNumber7"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNumber7" />
 </androidx.constraintlayout.widget.ConstraintLayout>
