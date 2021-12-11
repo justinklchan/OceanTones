@@ -377,61 +377,61 @@ public class Constants {
                 tv2.setText("ofdm_128_12000");
                 Constants.mode="ofdm";
             }
+//            else if (Constants.file_num==38) {
+//                Constants.pulse = FileOperations.readrawasset(context, R.raw.signal_debug3_128_48000_1000_6000_data);
+//                tv2.setText("ofdm_128_48000");
+//                Constants.mode="ofdm";
+//            }
             else if (Constants.file_num==38) {
-                Constants.pulse = FileOperations.readrawasset(context, R.raw.signal_debug3_128_48000_1000_6000_data);
-                tv2.setText("ofdm_128_48000");
-                Constants.mode="ofdm";
-            }
-            else if (Constants.file_num==39) {
 //                Constants.pulse = FileOperations.readrawasset(context, R.raw.signal_debug3_240_200_1000_6000_data);
                 tv2.setText("ofdm_240_0");
                 Constants.mode="ofdm";
             }
-            else if (Constants.file_num==40) {
+            else if (Constants.file_num==39) {
                 Constants.pulse = FileOperations.readrawasset(context, R.raw.signal_debug3_240_200_1000_6000_data);
                 tv2.setText("ofdm_240_200");
                 Constants.mode="ofdm";
             }
-            else if (Constants.file_num==41) {
+            else if (Constants.file_num==40) {
                 Constants.pulse = FileOperations.readrawasset(context, R.raw.signal_debug3_240_1200_1000_6000_data);
                 tv2.setText("ofdm_240_1200");
                 Constants.mode="ofdm";
             }
-            else if (Constants.file_num==42) {
+            else if (Constants.file_num==41) {
                 Constants.pulse = FileOperations.readrawasset(context, R.raw.signal_debug3_240_12000_1000_6000_data);
                 tv2.setText("ofdm_240_12000");
                 Constants.mode="ofdm";
             }
-            else if (Constants.file_num==43) {
-                Constants.pulse = FileOperations.readrawasset(context, R.raw.signal_debug3_240_48000_1000_6000_data);
-                tv2.setText("ofdm_240_48000");
-                Constants.mode="ofdm";
-            }
-            else if (Constants.file_num==44) {
+//            else if (Constants.file_num==43) {
+//                Constants.pulse = FileOperations.readrawasset(context, R.raw.signal_debug3_240_48000_1000_6000_data);
+//                tv2.setText("ofdm_240_48000");
+//                Constants.mode="ofdm";
+//            }
+            else if (Constants.file_num==42) {
 //                Constants.pulse = FileOperations.readrawasset(context, R.raw.ofdmz_20000);
                 tv2.setText("ofdm_480_0");
                 Constants.mode="ofdm";
             }
-            else if (Constants.file_num==45) {
+            else if (Constants.file_num==43) {
                 Constants.pulse = FileOperations.readrawasset(context, R.raw.signal_debug3_480_200_1000_6000_data);
                 tv2.setText("ofdm_480_200");
                 Constants.mode="ofdm";
             }
-            else if (Constants.file_num==46) {
+            else if (Constants.file_num==44) {
                 Constants.pulse = FileOperations.readrawasset(context, R.raw.signal_debug3_480_1200_1000_6000_data);
                 tv2.setText("ofdm_480_1200");
                 Constants.mode="ofdm";
             }
-            else if (Constants.file_num==47) {
+            else if (Constants.file_num==45) {
                 Constants.pulse = FileOperations.readrawasset(context, R.raw.signal_debug3_480_12000_1000_6000_data);
                 tv2.setText("ofdm_480_12000");
                 Constants.mode="ofdm";
             }
-            else if (Constants.file_num==48) {
-                Constants.pulse = FileOperations.readrawasset(context, R.raw.signal_debug3_480_48000_1000_6000_data);
-                tv2.setText("ofdm_480_48000");
-                Constants.mode="ofdm";
-            }
+//            else if (Constants.file_num==48) {
+//                Constants.pulse = FileOperations.readrawasset(context, R.raw.signal_debug3_480_48000_1000_6000_data);
+//                tv2.setText("ofdm_480_48000");
+//                Constants.mode="ofdm";
+//            }
 //            else if (Constants.file_num==22) {
 //                Constants.pulse = FileOperations.readrawasset(context, R.raw.mp_signal1);
 //                tv2.setText("equalizer");
