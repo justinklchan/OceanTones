@@ -30,10 +30,15 @@ public class AudioSpeaker extends Thread {
      * @TODO upgrade deprecated calls.
      */
     int preamble_length;
-    public AudioSpeaker(Context mycontext, short[] samples, int samplingFreq, int loops, int preamble_length) {
+    public AudioSpeaker(Context mycontext, short[] samples, int samplingFreq, int loops, int preamble_length, boolean top) {
         this.loops = loops;
         this.preamble_length=preamble_length;
-        this.speakerType = AudioManager.STREAM_SYSTEM; // streamType – the type of the audio stream.
+//        if (top) {
+//            this.speakerType = AudioManager.STREAM_VOICE_CALL;
+//        }
+//        else {
+            this.speakerType = AudioManager.STREAM_SYSTEM; // streamType – the type of the audio stream
+//        }
         this.mycontext = mycontext;
         man = (AudioManager)mycontext.getSystemService(Context.AUDIO_SERVICE);
         for (Integer i : streams) {

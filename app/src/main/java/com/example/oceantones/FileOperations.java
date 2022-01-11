@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class FileOperations {
 
     public static void writetofile(Activity av, short[] buff, String filename) {
-//        Log.e("asdf","writetofile");
+        Log.e("asdf","writetofile "+(buff==null));
         try {
             String dir = av.getExternalFilesDir(null).toString();
             writetofile(dir, buff, filename);
@@ -42,7 +42,7 @@ public class FileOperations {
 
     public static void writetofile(String _ExternalFilesDir, short[] buff, String filename) {
         Constants.writing=true;
-        Log.e("asdf","writetofile " + filename);
+        Log.e("asdf","writetofile " + filename + " "+(buff==null));
         long ts = System.currentTimeMillis();
 
         try {
@@ -62,7 +62,7 @@ public class FileOperations {
             buf.flush();
             buf.close();
         } catch(Exception e) {
-            Log.e("asdf",e.toString());
+            Log.e("asdf","write to file exception " +e.toString());
         }
         Log.e("asdf","finish writing "+filename + (System.currentTimeMillis()-ts));
     }
@@ -71,7 +71,7 @@ public class FileOperations {
 //        if (Constants.imu) {
         Constants.writing=true;
             long ts = System.currentTimeMillis();
-            Log.e("asdf","writing sensors "+Constants.acc.size()+","+Constants.gyro.size());
+            Log.e("asdf","writing sensors "+Constants.acc.size()+","+Constants.gyro.size()+","+filename);
 
             try {
                 String dir = av.getExternalFilesDir(null).toString();

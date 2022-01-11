@@ -13,6 +13,7 @@ import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,11 +32,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
-    TextView tv1,tv2,tv3;
+    TextView tv1,tv2;
 
     private static SensorManager sensorManager;
     private Sensor accelerometer;
     private Sensor gyroscope;
+    ImageView iv,iv2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         tv1 = findViewById(R.id.textView4);
         tv2 = findViewById(R.id.textView8);
-        tv3 = findViewById(R.id.textView9);
+        Constants.tv3 = findViewById(R.id.textView9);
 
         Constants.startb=findViewById(R.id.button);
         Constants.stopb=findViewById(R.id.button2);
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Constants.stopb.setEnabled(false);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
         sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_FASTEST);
@@ -81,6 +84,44 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 1234);
         Activity av = this;
 //        Constants.et1.setText(Constants.file_num);
+
+        iv = findViewById(R.id.imageView);
+        iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(av).edit();
+                String ss = Constants.et1.getText().toString();
+                if (ss.length()>0) {
+                    int ii = Integer.parseInt(ss)+1;
+                    if (ii >= 0) {
+                        editor.putInt("file_num", ii);
+                        Constants.et1.setText(ii + "");
+                        editor.commit();
+                        Constants.file_num = ii;
+                        Constants.setTones(tv2, av);
+                    }
+                }
+            }
+        });
+
+        iv2 = findViewById(R.id.imageView2);
+        iv2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(av).edit();
+                String ss = Constants.et1.getText().toString();
+                if (ss.length()>0) {
+                    int ii = Integer.parseInt(ss)-1;
+                    if (ii >= 0) {
+                        editor.putInt("file_num", ii);
+                        Constants.et1.setText(ii + "");
+                        editor.commit();
+                        Constants.file_num = ii;
+                        Constants.setTones(tv2, av);
+                    }
+                }
+            }
+        });
 
         Constants.sw1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -233,7 +274,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     editor.putInt("tone_len", Integer.parseInt(ss));
                     editor.commit();
                     Constants.tone_len = Integer.parseInt(ss);
-                    Constants.setTones(tv2,av);
+//                    Constants.setTones(tv2,av);
                 }
             }
         });
@@ -346,7 +387,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
-    SendChirpAsyncTask task;
     public void onstart(View v) {
         onstarthelper();
     }
@@ -358,98 +398,57 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Log.e("asdf", "onstart");
 
         String bigts="";
-        if (Constants.file_num==8) {
-//            Constants.pulse = SendChirpAsyncTask.continuouspulse(
-//                    1, 1000,
-//                    5000, .5,
-//                    Constants.SamplingRate,
-//                    Constants.scale1);
-//            tv2.setText("chirp 1s (1-5khz)");
-//            Constants.sp1 = new AudioSpeaker(this, Constants.pulse, 48000, 0, 0);
-//            Constants.sp1.play(1);
-//
-//            try {
-//                Thread.sleep(2000);
-//            }
-//            catch(Exception e) {
-//                Log.e("asdf",e.getMessage());
-//            }
-//
-//            for (int i = 0; i < 1; i++) {
-//                try {
-//                    while (Constants.writing) {
-//                        Thread.sleep(100);
-//                    }
-//                    Constants.acc = new LinkedList<>();
-//                    Constants.gyro = new LinkedList<>();
-//
-//                    Constants.file_num = 9 + i;
-//                    Constants.setTones(tv2, this);
-//                    String ts = System.currentTimeMillis() + "";
-//                    Constants.ts = ts;
-//                    String trim = ts.substring(ts.length() - 4, ts.length());
-//                    bigts += trim + "\n";
-//
-//                    if (i == 0) {
-//                        task = new SendChirpAsyncTask(this, ts, tv2, tv3, true);
-//                    } else {
-//                        task = new SendChirpAsyncTask(this, ts, tv2, tv3, false);
-//                    }
-//                    task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR).get();
-//                    Thread.sleep(1000);
-//                }
-//                catch(Exception e) {
-//                    Log.e("asdf",e.getMessage());
-//                }
-//                Log.e("asdf","NEXT");
-//            }
-//            Constants.file_num=8;
-
+        if (Constants.contains(Constants.file_num) != -1) {
             String longts="";
-            long ts1=System.currentTimeMillis();
-            for (int i = 0; i < 8; i++) {
-                String ts = ts1 + (i+1) + "";
-                longts+=ts+"\n";
+            String ts=System.currentTimeMillis()+"";
                 Constants.ts = ts;
                 String trim = ts.substring(ts.length() - 4, ts.length());
                 bigts += trim + "\n";
-            }
+            tv1.setText(bigts);
 
-            task = new SendChirpAsyncTask(this, longts, tv2, tv3);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            Constants.task = new SendChirpAsyncTask(this, longts, tv2, Constants.tv3);
+            Constants.task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         else {
             String ts = System.currentTimeMillis() + "";
             Constants.ts = ts;
             String trim = ts.substring(ts.length() - 4, ts.length());
             bigts+=trim+"\n";
+            tv1.setText(bigts);
 
-            task = new SendChirpAsyncTask(this, ts, tv2, tv3);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            Constants.task = new SendChirpAsyncTask(this, ts, tv2, Constants.tv3);
+            Constants.task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-        tv1.setText(bigts);
     }
 
     public void onstop(View v) {
+        if (Constants.timer!=null) {
+            Constants.timer.cancel();
+        }
+        Constants.tv3.setText("");
+
         sensorManager.unregisterListener(this);
 
         Log.e("asdf","onstop");
         Constants.sensorFlag=false;
         if (Constants.acc != null && Constants.acc.size() > 0) {
-            FileOperations.writeSensors(this, Constants.ts);
+            FileOperations.writeSensors(this, Constants.ts+".txt");
         }
-        task.cancel(true);
         if (Constants._OfflineRecorder!=null) {
             Constants._OfflineRecorder.halt();
         }
+        Constants.task.cancel(true);
         if (Constants.sp1!=null) {
             Constants.sp1.pause();
         }
         Constants.enableUI();
 
-        if (Integer.parseInt(Constants.et1.getText().toString()) == 8) {
-            Constants.file_num=8;
-            Constants.setTones(tv2,this);
+        for (int i = 0; i < Constants.repeatNum.length; i++) {
+            if (Constants.file_num >= Constants.repeatNum[i] &&
+                Constants.file_num <= Constants.repeatNum[i] + Constants.numToRepeat[i]) {
+                Constants.file_num = Constants.repeatNum[i];
+                break;
+            }
         }
     }
 

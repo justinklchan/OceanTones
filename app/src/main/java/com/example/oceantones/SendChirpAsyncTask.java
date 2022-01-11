@@ -106,6 +106,11 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void unused) {
         super.onPostExecute(unused);
+
+        if (Constants.mode.equals("mp")) {
+            FileOperations.writeSensors(av, Constants.ts + ".txt");
+        }
+
         MainActivity.unreg(av);
         Log.e("asdf","postexec "+(System.currentTimeMillis()-taskts));
 
@@ -210,7 +215,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
                 //            String pulse2_str=Arrays.toString(pulse2);
                 Log.e("asdf", "time " + (System.currentTimeMillis() - t1));
 
-                Constants.sp1 = new AudioSpeaker(av, pulse2, 48000, Constants.tone_len, preamble.length);
+                Constants.sp1 = new AudioSpeaker(av, pulse2, 48000, Constants.tone_len, preamble.length,false);
                 Log.e("asdf", "play tone " + Constants.tones[i]);
 
                 int finalI = i;
@@ -249,43 +254,72 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
             Log.e("asdf", "done sleeping");
         }
         else if (Constants.mode.equals("mp")) {
-            if (Constants.file_num==8) {
-                String[] tsi = ts.split("\n");
-                for (int i = 0; i < tsi.length; i++) {
-                    try {
+            int idx = Constants.contains(Constants.file_num);
+            if (idx != -1) {
+                int fnum = Constants.repeatNum[idx];
+                if (Constants.sw1.isChecked()) {
+                    Constants.setTones(tv, av);
+                    Constants.acc = new LinkedList<>();
+                    Constants.gyro = new LinkedList<>();
+                    Constants.sensorFlag=true;
+
+                    Constants.setTimer(av);
+//                    String[] tsi = ts.split("\n");
+                    for (int i = 0; i < Constants.numToRepeat[idx]; i++) {
+                        Constants.fidxRepeat = i;
+                        try {
 //                        while (Constants.writing) {
                             Thread.sleep(1000);
 //                        }
+                        } catch (Exception e) {
+                            Log.e("asdf", e.getMessage());
+                        }
+                        Constants.file_num = (fnum + 1) + i;
+                        Constants.setTones(tv, av);
+//                    Constants.setTones(tv2, av);
+//                        Constants.ts = tsi[i];
+                        if (i == 0) {
+                            mphelper(true);
+                        } else {
+                            mphelper(false);
+                        }
                     }
-                    catch(Exception e) {
-                        Log.e("asdf",e.getMessage());
-                    }
-                    Constants.file_num = 9 + i;
-                    Constants.setTones(tv, av);
-                    Constants.setTones(tv2, av);
-                    Constants.ts = tsi[i];
-                    if (i==0) {
-                        mphelper(true);
-                    }
-                    else {
-                        mphelper(false);
-                    }
+                    Constants.file_num = fnum;
                 }
-                Constants.file_num = 8;
-                Constants.setTones(tv, av);
+                else {
+                    Constants.setTones(tv, av);
+                    Constants.setTimer(av);
+                    mphelper_rx(true);
+                }
             }
             else {
-                mphelper(true);
+                Constants.acc = new LinkedList<>();
+                Constants.gyro = new LinkedList<>();
+                Constants.setTimer(av);
+                if (Constants.sw1.isChecked()) {
+                    mphelper(true);
+                }
+                else {
+                    mphelper_rx(true);
+                }
             }
         }
         else if (Constants.mode.equals("ofdm")) {
+            Constants.setTimer(av);
             ofdmhelper(true);
+        }
+        else if (Constants.mode.equals("rc")) {
+            Constants.setTimer(av);
+            rchelper(true);
+        }
+        else if (Constants.mode.equals("dual")) {
+            dualhelper(true);
         }
         return null;
     }
 
-    public void ofdmhelper(boolean initSleep) {
-        Log.e("asdf","mphelper");
+    public void dualhelper(boolean initSleep) {
+        Log.e("asdf","dualhelper");
         Constants.acc = new LinkedList<>();
         Constants.gyro = new LinkedList<>();
         Constants.sensorFlag=true;
@@ -301,7 +335,97 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         Log.e("asdf","STATE "+Constants._OfflineRecorder.getState()+","+Constants._OfflineRecorder.rec.getRecordingState());
         Constants._OfflineRecorder.start();
 
-        Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, Constants.reps-1, 0);
+        Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, Constants.reps-1, 48000*2,true);
+//        Constants.sp2 = new AudioSpeaker(av, Constants.pulse2, 48000, Constants.reps-1, 48000*2,true);
+
+        if (initSleep) {
+            Log.e("asdf", "init sleep");
+            try {
+                Thread.sleep((long) (Constants.init_sleep * 1000));
+            } catch (Exception e) {
+                Log.e("asdf", e.getMessage());
+            }
+        }
+
+        if (Constants.transmit) {
+            Constants.sp1.play(Constants.scale2);
+//            Constants.sp2.play(Constants.scale2);
+        }
+
+        try {
+            int stime = (pulse_length/Constants.SamplingRate)*1000;
+            Log.e("asdf", "sleep for " + stime);
+            Thread.sleep((long) stime);
+        } catch (Exception e) {
+            Log.e("asdf", e.getMessage());
+        }
+        Constants.sp1.reset();
+        Constants.sp1 = null;
+//        Constants.sp2.reset();
+//        Constants.sp2 = null;
+    }
+
+    public void rchelper(boolean initSleep) {
+        Log.e("asdf","ofdmhelper");
+        Constants.acc = new LinkedList<>();
+        Constants.gyro = new LinkedList<>();
+        Constants.sensorFlag=true;
+
+        int pulse_length = Constants.tone_len*Constants.SamplingRate;
+        int record_length = pulse_length;
+        if (initSleep) {
+            record_length += (Constants.init_sleep*Constants.SamplingRate);
+        }
+
+        Log.e("asdf","RECORD "+record_length);
+        Constants._OfflineRecorder = new OfflineRecorder(av, Constants.SamplingRate, record_length, Constants.ts);
+        Log.e("asdf","STATE "+Constants._OfflineRecorder.getState()+","+Constants._OfflineRecorder.rec.getRecordingState());
+        Constants._OfflineRecorder.start();
+
+        Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 0,false);
+
+        if (initSleep) {
+            Log.e("asdf", "init sleep");
+            try {
+                Thread.sleep((long) (Constants.init_sleep * 1000));
+            } catch (Exception e) {
+                Log.e("asdf", e.getMessage());
+            }
+        }
+
+        if (Constants.transmit) {
+            Constants.sp1.play(Constants.scale2);
+        }
+
+        try {
+            int stime = (pulse_length/Constants.SamplingRate)*1000;
+            Log.e("asdf", "sleep for " + stime);
+            Thread.sleep((long) stime);
+        } catch (Exception e) {
+            Log.e("asdf", e.getMessage());
+        }
+        Constants.sp1.reset();
+        Constants.sp1 = null;
+    }
+
+    public void ofdmhelper(boolean initSleep) {
+        Log.e("asdf","ofdmhelper");
+        Constants.acc = new LinkedList<>();
+        Constants.gyro = new LinkedList<>();
+        Constants.sensorFlag=true;
+
+        int pulse_length = Constants.tone_len*Constants.SamplingRate;
+        int record_length = pulse_length;
+        if (initSleep) {
+            record_length += (Constants.init_sleep*Constants.SamplingRate);
+        }
+
+        Log.e("asdf","RECORD "+record_length);
+        Constants._OfflineRecorder = new OfflineRecorder(av, Constants.SamplingRate, record_length, Constants.ts);
+        Log.e("asdf","STATE "+Constants._OfflineRecorder.getState()+","+Constants._OfflineRecorder.rec.getRecordingState());
+        Constants._OfflineRecorder.start();
+
+        Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, Constants.reps-1, 48000*2,false);
 
         if (initSleep) {
             Log.e("asdf", "init sleep");
@@ -328,10 +452,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
     }
 
     public void mphelper(boolean initSleep) {
-        Log.e("asdf","mphelper");
-        Constants.acc = new LinkedList<>();
-        Constants.gyro = new LinkedList<>();
-        Constants.sensorFlag=true;
+        Log.e("asdf","mphelper "+Constants.file_num);
 
         int pulse_length = Constants.tone_len*Constants.SamplingRate;
         int record_length = pulse_length;
@@ -339,12 +460,19 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
             record_length += (Constants.init_sleep*Constants.SamplingRate);
         }
 
-        Log.e("asdf","RECORD "+record_length);
-        Constants._OfflineRecorder = new OfflineRecorder(av, Constants.SamplingRate, record_length, Constants.ts);
-        Log.e("asdf","STATE "+Constants._OfflineRecorder.getState()+","+Constants._OfflineRecorder.rec.getRecordingState());
-        Constants._OfflineRecorder.start();
+//        Log.e("asdf","RECORD "+record_length);
+//        Constants._OfflineRecorder = new OfflineRecorder(av, Constants.SamplingRate, record_length, Constants.ts);
+//        Log.e("asdf","STATE "+Constants._OfflineRecorder.getState()+","+Constants._OfflineRecorder.rec.getRecordingState());
+//        Constants._OfflineRecorder.start();
 
-        Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 0);
+        if (Constants.transmit) {
+            Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 48000 * 2, false);
+        }
+
+//        Log.e("asdf","RECORD "+record_length);
+//        Constants._OfflineRecorder = new OfflineRecorder(av, Constants.SamplingRate, record_length, Constants.ts);
+//        Log.e("asdf","STATE "+Constants._OfflineRecorder.getState()+","+Constants._OfflineRecorder.rec.getRecordingState());
+//        Constants._OfflineRecorder.start();
 
         if (initSleep) {
             Log.e("asdf", "init sleep");
@@ -366,7 +494,46 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         } catch (Exception e) {
             Log.e("asdf", e.getMessage());
         }
-        Constants.sp1.reset();
-        Constants.sp1 = null;
+        if (Constants.sp1 != null) {
+            Constants.sp1.reset();
+            Constants.sp1 = null;
+        }
+    }
+
+    public void mphelper_rx(boolean initSleep) {
+        Log.e("asdf","mphelper "+Constants.file_num);
+        Constants.acc = new LinkedList<>();
+        Constants.gyro = new LinkedList<>();
+        Constants.sensorFlag=true;
+
+//        int pulse_length = Constants.tone_len*Constants.SamplingRate;
+        int record_length = (Constants.aa.get(Constants.file_num))*Constants.SamplingRate;
+        if (initSleep) {
+            record_length += (Constants.init_sleep*Constants.SamplingRate);
+        }
+
+        Log.e("asdf","RECORD "+record_length);
+        Constants._OfflineRecorder = new OfflineRecorder(av, Constants.SamplingRate, record_length, Constants.ts);
+        Log.e("asdf","STATE "+Constants._OfflineRecorder.getState()+","+Constants._OfflineRecorder.rec.getRecordingState());
+        Constants._OfflineRecorder.start();
+
+        if (initSleep) {
+            Log.e("asdf", "init sleep");
+            try {
+                Thread.sleep((long) (Constants.init_sleep * 1000));
+            } catch (Exception e) {
+                Log.e("asdf", e.getMessage());
+            }
+        }
+
+        try {
+            int stime = (record_length/Constants.SamplingRate)*1000;
+            Log.e("asdf", "sleep for " + stime);
+            Thread.sleep((long) stime);
+        } catch (Exception e) {
+            Log.e("asdf", e.getMessage());
+        }
+
+        FileOperations.writeSensors(av,Constants.ts+".txt");
     }
 }

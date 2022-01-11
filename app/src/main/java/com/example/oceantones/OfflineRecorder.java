@@ -100,13 +100,13 @@ public class OfflineRecorder extends Thread {
             this.recording = false;
             this.rec.stop();
             this.rec.release();
-            Log.e("asdf","halt");
+            Log.e("asdf","halt "+(samples==null));
             if (channels == AudioFormat.CHANNEL_IN_MONO) {
                 FileOperations.writetofile(av, samples, filename+".txt");
             }
             else if (channels == AudioFormat.CHANNEL_IN_STEREO) {
-                FileOperations.writetofile(av, samples, filename+"-top.txt");
-                FileOperations.writetofile(av, samples, filename+"-bottom.txt");
+                FileOperations.writetofile(av, samples1, filename+"-top.txt");
+                FileOperations.writetofile(av, samples2, filename+"-bottom.txt");
 
             }
 
