@@ -487,6 +487,15 @@ public class Constants {
             tv2.setText("diff_signal_debug3_960_0_67_1000_1250_data");
             Constants.mode="mp";
         }
+        if (Constants.file_num==49) {
+            Constants.pulse = SendChirpAsyncTask.continuouspulse(
+                        .15, 1800,
+                        4400, .25,
+                        Constants.SamplingRate,
+                        Constants.scale1);
+            tv2.setText("chirp");
+            Constants.mode="ofdm";
+        }
 //        if (Constants.file_num==44) {
 //            Constants.pulse = FileOperations.readrawasset(context, R.raw.preamble_len_check);
 //            tv2.setText("preambles");
