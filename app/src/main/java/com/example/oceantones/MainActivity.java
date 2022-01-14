@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private static SensorManager sensorManager;
     private Sensor accelerometer;
     private Sensor gyroscope;
+    private Sensor rotate;
     ImageView iv,iv2;
 
     @Override
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         tv1 = findViewById(R.id.textView4);
         tv2 = findViewById(R.id.textView8);
+        Constants.tv12 = findViewById(R.id.textView12);
+        Constants.tv13 = findViewById(R.id.textView13);
         Constants.tv3 = findViewById(R.id.textView9);
 
         Constants.startb=findViewById(R.id.button);
@@ -56,8 +59,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        rotate = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
         sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, rotate, SensorManager.SENSOR_DELAY_FASTEST);
 
         Constants.et1=findViewById(R.id.editTextNumber);
         Constants.et2=findViewById(R.id.editTextNumber2);
@@ -70,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Constants.sw1=findViewById(R.id.switch1);
         Constants.sw2=findViewById(R.id.switch2);
         Constants.sw3=findViewById(R.id.switch3);
+        Constants.sw4=findViewById(R.id.switch4);
         Constants.init(this);
         Constants.setTones(tv2,this);
 
@@ -148,6 +154,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 editor.putBoolean("imu", isChecked);
                 editor.commit();
                 Constants.imu  = isChecked;
+            }
+        });
+        Constants.sw4.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(av).edit();
+                editor.putBoolean("gap", isChecked);
+                editor.commit();
+                Constants.gap  = isChecked;
+                Constants.setTones(tv2,av);
             }
         });
         Constants.et1.addTextChangedListener(new TextWatcher() {
@@ -368,21 +384,56 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onResume();
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
         sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, rotate, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
+    int offset = 0;
+    float[] orientation = new float[3];
+    float[] rMat = new float[9];
     @Override
     public void onSensorChanged(SensorEvent event) {
-//        Log.e("imu",event.values[0]+","+Constants.sensorFlag);
+//        Log.e("imu",event.sensor.equals(rotate)+"");
         if (Constants.sensorFlag && Constants.imu) {
             if (event.sensor.equals(accelerometer)) {
                 Constants.acc.add(event.values[0]+","+event.values[1]+","+event.values[2]+"\n");
             }
             else if (event.sensor.equals(gyroscope)) {
                 Constants.gyro.add(event.values[0]+","+event.values[1]+","+event.values[2]+"\n");
+            }
+            else if (event.sensor.equals(rotate)) {
+//                Log.e("asdf","rotate");
+                SensorManager.getRotationMatrixFromVector( rMat, event.values );
+                int a=(int)Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]);
+                if (a < 0) {
+                    a=180+(180-Math.abs(a));
+                }
+                a=(int)(Math.round(a/5.0) * 5);
+
+                if (Constants.azimuth.size()==0) {
+                    offset = a;
+                }
+
+                int delta = a-offset;
+                int adjusted_azimuth = delta;
+                if (adjusted_azimuth<0) {
+                    adjusted_azimuth=(360+adjusted_azimuth);
+                }
+                if (Constants.gap) {
+                    adjusted_azimuth = 360 - adjusted_azimuth;
+                }
+
+                Constants.azimuth.add(adjusted_azimuth);
+
+                int p=(int)Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[1]);
+                p=(int)(Math.round(p/5.0) * 5);
+                Constants.pitch.add(p);
+
+                Constants.tv12.setText(adjusted_azimuth+"");
+                Constants.tv13.setText(p+"");
             }
         }
     }
@@ -394,6 +445,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onstarthelper() {
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
         sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, rotate, SensorManager.SENSOR_DELAY_FASTEST);
 
         Log.e("asdf", "onstart");
 

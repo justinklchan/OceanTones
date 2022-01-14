@@ -160,6 +160,8 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         if (Constants.mode.equals("tone")) {
             Constants.acc = new LinkedList<>();
             Constants.gyro = new LinkedList<>();
+            Constants.azimuth = new LinkedList<>();
+            Constants.pitch = new LinkedList<>();
             Constants.sensorFlag=true;
 
             int preamble_len=9600;
@@ -261,6 +263,8 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
                     Constants.setTones(tv, av);
                     Constants.acc = new LinkedList<>();
                     Constants.gyro = new LinkedList<>();
+                    Constants.azimuth = new LinkedList<>();
+                    Constants.pitch = new LinkedList<>();
                     Constants.sensorFlag=true;
 
                     Constants.setTimer(av);
@@ -295,6 +299,8 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
             else {
                 Constants.acc = new LinkedList<>();
                 Constants.gyro = new LinkedList<>();
+                Constants.azimuth = new LinkedList<>();
+                Constants.pitch = new LinkedList<>();
                 Constants.setTimer(av);
                 if (Constants.sw1.isChecked()) {
                     mphelper(true);
@@ -322,6 +328,8 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         Log.e("asdf","dualhelper");
         Constants.acc = new LinkedList<>();
         Constants.gyro = new LinkedList<>();
+        Constants.azimuth = new LinkedList<>();
+        Constants.pitch = new LinkedList<>();
         Constants.sensorFlag=true;
 
         int pulse_length = Constants.tone_len*Constants.SamplingRate;
@@ -369,6 +377,8 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         Log.e("asdf","ofdmhelper");
         Constants.acc = new LinkedList<>();
         Constants.gyro = new LinkedList<>();
+        Constants.azimuth = new LinkedList<>();
+        Constants.pitch = new LinkedList<>();
         Constants.sensorFlag=true;
 
         int pulse_length = Constants.tone_len*Constants.SamplingRate;
@@ -412,6 +422,8 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         Log.e("asdf","ofdmhelper");
         Constants.acc = new LinkedList<>();
         Constants.gyro = new LinkedList<>();
+        Constants.azimuth = new LinkedList<>();
+        Constants.pitch = new LinkedList<>();
         Constants.sensorFlag=true;
 
         int pulse_length = Constants.tone_len*Constants.SamplingRate;
@@ -425,7 +437,12 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         Log.e("asdf","STATE "+Constants._OfflineRecorder.getState()+","+Constants._OfflineRecorder.rec.getRecordingState());
         Constants._OfflineRecorder.start();
 
-        Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 0,false);
+        if (Constants.gap) {
+            Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 96000*2, false);
+        }
+        else {
+            Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 96000, false);
+        }
 
         if (initSleep) {
             Log.e("asdf", "init sleep");
@@ -504,6 +521,8 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         Log.e("asdf","mphelper "+Constants.file_num);
         Constants.acc = new LinkedList<>();
         Constants.gyro = new LinkedList<>();
+        Constants.azimuth = new LinkedList<>();
+        Constants.pitch = new LinkedList<>();
         Constants.sensorFlag=true;
 
 //        int pulse_length = Constants.tone_len*Constants.SamplingRate;

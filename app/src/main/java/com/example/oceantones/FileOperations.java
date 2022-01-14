@@ -96,6 +96,14 @@ public class FileOperations {
                 }
                 buf2.flush();
                 buf2.close();
+
+                File file3 = new File(dir, "rot-" + filename);
+                BufferedWriter buf3 = new BufferedWriter(new FileWriter(file3, false));
+                for (int i = 0; i < Constants.azimuth.size(); i++) {
+                    buf3.write(Constants.azimuth.get(i)+","+Constants.pitch.get(i)+"\n");
+                }
+                buf3.flush();
+                buf3.close();
             } catch (Exception e) {
                 Log.e("asdf", e.toString());
             }

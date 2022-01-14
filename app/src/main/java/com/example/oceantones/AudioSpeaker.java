@@ -34,11 +34,13 @@ public class AudioSpeaker extends Thread {
         this.loops = loops;
         this.preamble_length=preamble_length;
 //        if (top) {
-//            this.speakerType = AudioManager.STREAM_VOICE_CALL;
-//        }
-//        else {
+        Log.e("asdf","model "+android.os.Build.MODEL+"");
+        if (android.os.Build.MODEL.equals("IN2020")) {
+            this.speakerType = AudioManager.STREAM_MUSIC;
+        }
+        else {
             this.speakerType = AudioManager.STREAM_SYSTEM; // streamType – the type of the audio stream
-//        }
+        }
         this.mycontext = mycontext;
         man = (AudioManager)mycontext.getSystemService(Context.AUDIO_SERVICE);
         for (Integer i : streams) {

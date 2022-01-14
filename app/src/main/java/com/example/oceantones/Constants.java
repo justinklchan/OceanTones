@@ -26,7 +26,8 @@ public class Constants {
     public static boolean transmit=true;
     public static boolean stereo=true;
     public static boolean imu=true;
-    public static Switch sw1,sw2,sw3;
+    public static boolean gap=true;
+    public static Switch sw1,sw2,sw3,sw4;
     public static String mode="tone";
     public static int[] tones=new int[]{};
     public static short[] pulse=new short[]{};
@@ -35,12 +36,15 @@ public class Constants {
     public static short[] ofdm2=new short[]{};
     public static LinkedList<String>acc;
     public static LinkedList<String>gyro;
+    public static LinkedList<Integer>azimuth;
+    public static LinkedList<Integer>pitch;
     public static boolean sensorFlag=false;
     public static String ts;
     public static boolean writing=false;
     public static int[] repeatNum= new int[]{36,44};
     public static int[] numToRepeat=new int[]{5,3};
     public static HashMap<Integer,Integer> aa;
+
 
     public static void init(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -55,6 +59,7 @@ public class Constants {
         Constants.stereo=prefs.getBoolean("stereo",Constants.stereo);
         Constants.imu=prefs.getBoolean("imu",Constants.imu);
         Constants.reps=prefs.getInt("reps",Constants.reps);
+        Constants.gap=prefs.getBoolean("gap",Constants.gap);
 
         Constants.et1.setText(file_num+"");
         Constants.et2.setText(scale1+"");
@@ -67,6 +72,7 @@ public class Constants {
         Constants.sw1.setChecked(Constants.transmit);
         Constants.sw2.setChecked(Constants.stereo);
         Constants.sw3.setChecked(Constants.imu);
+        Constants.sw4.setChecked(Constants.gap);
 
 //        ofdm1=FileOperations.readrawasset(context, R.raw.sig1);
 //        ofdm2=FileOperations.readrawasset(context, R.raw.sig2);
@@ -100,6 +106,9 @@ public class Constants {
 
         aa.put(48,5);
 
+        aa.put(51,30);
+        aa.put(52,60);
+
 //        aa.put(47,18);
 //        aa.put(48,18);
 //        aa.put(49,18);
@@ -111,6 +120,7 @@ public class Constants {
         Constants.sw1.setEnabled(false);
         Constants.sw2.setEnabled(false);
         Constants.sw3.setEnabled(false);
+        Constants.sw4.setEnabled(false);
         Constants.et1.setEnabled(false);
         Constants.et2.setEnabled(false);
         Constants.et3.setEnabled(false);
@@ -126,6 +136,7 @@ public class Constants {
         Constants.sw1.setEnabled(true);
         Constants.sw2.setEnabled(true);
         Constants.sw3.setEnabled(true);
+        Constants.sw4.setEnabled(true);
 
         Constants.et1.setEnabled(true);
         Constants.et2.setEnabled(true);
@@ -137,7 +148,7 @@ public class Constants {
     }
 
     public static CountDownTimer timer;
-    public static TextView tv3;
+    public static TextView tv3,tv12,tv13;
     public static int fidxRepeat=0;
     public static SendChirpAsyncTask task;
 
@@ -151,6 +162,7 @@ public class Constants {
     }
 
     public static void setTones(TextView tv2, Context context) {
+        Log.e("asdf","set tones"+Constants.file_num);
         if (aa.containsKey(Constants.file_num)) {
             Constants.tone_len = aa.get(Constants.file_num);
 
@@ -482,11 +494,6 @@ public class Constants {
             tv2.setText("single_signal_debug3_960_0_268_1000_3000_data");
             Constants.mode="mp";
         }
-        if (Constants.file_num==48) {
-            Constants.pulse = FileOperations.readrawasset(context, R.raw.diff_signal_debug3_960_0_67_1000_1250_data);
-            tv2.setText("diff_signal_debug3_960_0_67_1000_1250_data");
-            Constants.mode="mp";
-        }
         if (Constants.file_num==49) {
             Constants.pulse = SendChirpAsyncTask.continuouspulse(
                         .15, 1800,
@@ -494,6 +501,23 @@ public class Constants {
                         Constants.SamplingRate,
                         Constants.scale1);
             tv2.setText("chirp");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==50) {
+            Constants.pulse = FileOperations.readrawasset(context, R.raw.preamble_1000);
+            tv2.setText("preamble100");
+            Constants.mode="mp";
+        }
+        if (Constants.file_num==51||Constants.file_num==52) {
+            if (Constants.gap) {
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.chirps2);
+                Log.e("asdf","chirps1");
+            }
+            else {
+                Constants.pulse = FileOperations.readrawasset(context, R.raw.chirps1);
+                Log.e("asdf","chirps2");
+            }
+            tv2.setText("chirps");
             Constants.mode="ofdm";
         }
 //        if (Constants.file_num==44) {
