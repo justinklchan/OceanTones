@@ -26,7 +26,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,12 +43,29 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor gyroscope;
     private Sensor rotate;
     ImageView iv,iv2;
+    static Activity av;
 
+    private void hideSystemBars() {
+        WindowInsetsControllerCompat windowInsetsController =
+                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
+        if (windowInsetsController == null) {
+            return;
+        }
+        // Configure the behavior of the hidden system bars
+        windowInsetsController.setSystemBarsBehavior(
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        );
+        // Hide both the status bar and the navigation bar
+        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        this.av = this;
+        getSupportActionBar().hide();
+        hideSystemBars();
         tv1 = findViewById(R.id.textView4);
         tv2 = findViewById(R.id.textView8);
         Constants.tv12 = findViewById(R.id.textView12);
@@ -53,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         Constants.startb=findViewById(R.id.button);
         Constants.stopb=findViewById(R.id.button2);
+        Constants.prepb=findViewById(R.id.button3);
         Log.e("asdf",android.os.Build.MODEL);
         Constants.stopb.setEnabled(false);
 
@@ -391,6 +413,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
+    public void prep(View v) {
+        Constants.prep(this);
+    }
+
     int offset = 0;
     float[] orientation = new float[3];
     float[] rMat = new float[9];
@@ -451,6 +477,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         String bigts="";
         if (Constants.contains(Constants.file_num) != -1) {
+            Log.e("asdf", "option 1");
             String longts="";
             String ts=System.currentTimeMillis()+"";
                 Constants.ts = ts;
@@ -462,8 +489,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             Constants.task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         else {
-            String ts = System.currentTimeMillis() + "";
-            Constants.ts = ts;
+            Log.e("asdf", "option 2");
+            String ts= "";
+            if (Constants.sp1 == null) {
+                Log.e("asdf", "2a");
+                ts = System.currentTimeMillis() + "";
+                Constants.ts = ts;
+            }
+            else {
+                Log.e("asdf", "2b");
+                ts = Constants.ts;
+            }
             String trim = ts.substring(ts.length() - 4, ts.length());
             bigts+=trim+"\n";
             tv1.setText(bigts);

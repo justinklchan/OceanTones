@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -23,15 +25,48 @@ public class FileOperations {
         }
     }
 
+    public static double[] readfromfile(Activity av, String filename) {
+        LinkedList<Double> ll = new LinkedList<Double>();
+
+        try {
+            String dir = av.getExternalFilesDir(null).toString();
+            File file = new File(dir + File.separator + filename);
+            BufferedReader buf = new BufferedReader(new FileReader(file));
+
+            String line;
+            while ((line = buf.readLine()) != null && line.length() != 0) {
+                Log.e("asdf",line);
+//                ll.add(Double.parseDouble(line));
+            }
+
+            buf.close();
+        } catch (Exception e) {
+            Log.e("ble",e.getMessage());
+        }
+
+        double[] ar = new double[ll.size()];
+//        int counter = 0;
+//        for (Double d : ll) {
+//            ar[counter++] = d;
+//        }
+//        ll.clear();
+        return ar;
+    }
+
     public static short[] readrawasset(Context context, int id) {
         Scanner inp = new Scanner(context.getResources().openRawResource(id));
         LinkedList<Short> ll = new LinkedList<>();
+        int counter=0;
         while (inp.hasNextLine()) {
             ll.add(Short.parseShort(inp.nextLine()));
+            counter += 1;
+            if (counter%1000==0) {
+                Log.e("asdf",counter+"");
+            }
         }
         inp.close();
         short[] ar = new short[ll.size()];
-        int counter = 0;
+        counter = 0;
         for (Short d : ll) {
             ar[counter++] = d;
         }

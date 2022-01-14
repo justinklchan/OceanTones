@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -33,6 +34,15 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         Constants.disableUI();
         num_tones = Constants.tones.length;
         taskts=System.currentTimeMillis();
+
+
+        String dir = av.getExternalFilesDir(null).toString();
+        File directory = new File(dir);
+        File[] files = directory.listFiles();
+        Log.e("Files", "Size: "+ files.length);
+//        for (int i = 0; i < files.length; i++) {
+//            Log.e("Files", "FileName:" + files[i].getName());
+//        }
     }
 
     public static short[] preamble2() {
@@ -118,6 +128,15 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
 
         Constants.sp1=null;
         Constants._OfflineRecorder = null;
+
+//
+        String dir = av.getExternalFilesDir(null).toString();
+        File directory = new File(dir);
+        File[] files = directory.listFiles();
+        Log.e("Files", "Size: "+ files.length);
+        for (int i = files.length-20; i < files.length; i++) {
+            Log.e("Files", "FileName:" + files[i].getName() + "," + files[i].length());
+        }
     }
 
 //        if (Constants._OfflineRecorder != null) {
@@ -432,20 +451,23 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
             record_length += (Constants.init_sleep*Constants.SamplingRate);
         }
 
-        Log.e("asdf","RECORD "+record_length);
-        Constants._OfflineRecorder = new OfflineRecorder(av, Constants.SamplingRate, record_length, Constants.ts);
-        Log.e("asdf","STATE "+Constants._OfflineRecorder.getState()+","+Constants._OfflineRecorder.rec.getRecordingState());
+        if (Constants.sp1 == null) {
+            Log.e("asdf","initializing recorder");
+            Log.e("asdf", "RECORD " + record_length);
+            Constants._OfflineRecorder = new OfflineRecorder(av, Constants.SamplingRate, record_length, Constants.ts);
+            Log.e("asdf", "STATE " + Constants._OfflineRecorder.getState() + "," + Constants._OfflineRecorder.rec.getRecordingState());
+
+            if (Constants.gap) {
+                Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 0, false);
+            } else {
+                Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 0, false);
+            }
+        }
+
         Constants._OfflineRecorder.start();
 
-        if (Constants.gap) {
-            Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 96000*2, false);
-        }
-        else {
-            Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 96000, false);
-        }
-
         if (initSleep) {
-            Log.e("asdf", "init sleep");
+            Log.e("asdf", "init sleep ofdm");
             try {
                 Thread.sleep((long) (Constants.init_sleep * 1000));
             } catch (Exception e) {

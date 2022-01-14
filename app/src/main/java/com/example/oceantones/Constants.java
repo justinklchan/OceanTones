@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -20,9 +21,9 @@ public class Constants {
     public static AudioSpeaker sp2;
     public static OfflineRecorder _OfflineRecorder;
     public static EditText et1,et2,et3,et4,et5,et6,et7,et8;
-    public static Button startb, stopb;
+    public static Button startb, stopb,prepb;
     public static float scale1=1f,scale2=1f,gap_len=.5f;
-    public static int file_num=4,init_sleep=5,tone_len=5,freq_lim=18000,reps=1;
+    public static int file_num=51,init_sleep=5,tone_len=5,freq_lim=18000,reps=1;
     public static boolean transmit=true;
     public static boolean stereo=true;
     public static boolean imu=true;
@@ -106,8 +107,9 @@ public class Constants {
 
         aa.put(48,5);
 
-        aa.put(51,30);
-        aa.put(52,60);
+        aa.put(51,36);
+        aa.put(52,36*2);
+        aa.put(53,3);
 
 //        aa.put(47,18);
 //        aa.put(48,18);
@@ -117,6 +119,7 @@ public class Constants {
     public static void disableUI() {
         Constants.startb.setEnabled(false);
         Constants.stopb.setEnabled(true);
+        Constants.prepb.setEnabled(false);
         Constants.sw1.setEnabled(false);
         Constants.sw2.setEnabled(false);
         Constants.sw3.setEnabled(false);
@@ -133,6 +136,7 @@ public class Constants {
     public static void enableUI() {
         startb.setEnabled(true);
         stopb.setEnabled(false);
+        prepb.setEnabled(true);
         Constants.sw1.setEnabled(true);
         Constants.sw2.setEnabled(true);
         Constants.sw3.setEnabled(true);
@@ -479,21 +483,21 @@ public class Constants {
         if (Constants.file_num==44) {
             Constants.mode="mp";
         }
-        if (Constants.file_num==45) {
-            Constants.pulse = FileOperations.readrawasset(context, R.raw.single_signal_debug3_960_0_67_1000_3000_data);
-            tv2.setText("single_signal_debug3_960_0_67_1000_3000_data");
-            Constants.mode="mp";
-        }
-        if (Constants.file_num==46) {
-            Constants.pulse = FileOperations.readrawasset(context, R.raw.single_signal_debug3_960_0_134_1000_3000_data);
-            tv2.setText("single_signal_debug3_960_0_134_1000_3000_data");
-            Constants.mode="mp";
-        }
-        if (Constants.file_num==47) {
-            Constants.pulse = FileOperations.readrawasset(context, R.raw.single_signal_debug3_960_0_268_1000_3000_data);
-            tv2.setText("single_signal_debug3_960_0_268_1000_3000_data");
-            Constants.mode="mp";
-        }
+//        if (Constants.file_num==45) {
+//            Constants.pulse = FileOperations.readrawasset(context, R.raw.single_signal_debug3_960_0_67_1000_3000_data);
+//            tv2.setText("single_signal_debug3_960_0_67_1000_3000_data");
+//            Constants.mode="mp";
+//        }
+//        if (Constants.file_num==46) {
+//            Constants.pulse = FileOperations.readrawasset(context, R.raw.single_signal_debug3_960_0_134_1000_3000_data);
+//            tv2.setText("single_signal_debug3_960_0_134_1000_3000_data");
+//            Constants.mode="mp";
+//        }
+//        if (Constants.file_num==47) {
+//            Constants.pulse = FileOperations.readrawasset(context, R.raw.single_signal_debug3_960_0_268_1000_3000_data);
+//            tv2.setText("single_signal_debug3_960_0_268_1000_3000_data");
+//            Constants.mode="mp";
+//        }
         if (Constants.file_num==49) {
             Constants.pulse = SendChirpAsyncTask.continuouspulse(
                         .15, 1800,
@@ -519,7 +523,15 @@ public class Constants {
             }
             tv2.setText("chirps");
             Constants.mode="ofdm";
+
+            prep(context);
         }
+        if (Constants.file_num==53) {
+            Constants.pulse = FileOperations.readrawasset(context, R.raw.short2);
+            Constants.mode="ofdm";
+            prep(context);
+        }
+
 //        if (Constants.file_num==44) {
 //            Constants.pulse = FileOperations.readrawasset(context, R.raw.preamble_len_check);
 //            tv2.setText("preambles");
@@ -564,6 +576,34 @@ public class Constants {
 //            Constants.pulse = FileOperations.readrawasset(context, R.raw.code_4_signal_debug3_960_0_67_1000_2000_data);
 //            tv2.setText("code_4_signal_debug3_960_0_67_1000_2000_data");
 //            Constants.mode="ofdm";
+//        }
+    }
+
+    public static void prep(Context context) {
+        Log.e("asdf","prep");
+        if (Constants.gap) {
+            Constants.sp1 = new AudioSpeaker(context, Constants.pulse, 48000, -1, 0, false);
+        }
+        else {
+            Constants.sp1 = new AudioSpeaker(context, Constants.pulse, 48000, -1, 0, false);
+        }
+
+        int pulse_length = Constants.tone_len*Constants.SamplingRate;
+        int record_length = pulse_length;
+//            if (initSleep) {
+        record_length += (Constants.init_sleep*Constants.SamplingRate);
+//            }
+        Constants.ts = System.currentTimeMillis()+"";
+        Constants._OfflineRecorder = new OfflineRecorder(context, Constants.SamplingRate, record_length, Constants.ts);
+
+//        String dir = context.getExternalFilesDir(null).toString();
+//        File directory = new File(dir);
+//        File[] files = directory.listFiles();
+//        Log.e("Files", "Size: "+ files.length);
+//        for (int i = files.length-2; i < files.length; i++) {
+//            Log.e("Files", "FileName:" + files[i].getName());
+//            FileOperations.readfromfile(MainActivity.av,files[i].getName());
+//            break;
 //        }
     }
 

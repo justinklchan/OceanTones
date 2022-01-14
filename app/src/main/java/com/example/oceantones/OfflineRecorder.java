@@ -2,6 +2,7 @@ package com.example.oceantones;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
@@ -23,11 +24,12 @@ public class OfflineRecorder extends Thread {
     int count2;
     AudioRecord rec;
     int minbuffersize;
-    Activity av;
+    Context av;
     String filename;
     int channels;
 
-    public OfflineRecorder(Activity av, int samplingfrequency, int arrLength, String filename) {
+    public OfflineRecorder(Context av, int samplingfrequency, int arrLength, String filename) {
+        Log.e("rec","offline recorder");
         this.filename = filename;
         this.av = av;
         count = 0;
@@ -102,21 +104,23 @@ public class OfflineRecorder extends Thread {
             this.rec.release();
             Log.e("asdf","halt "+(samples==null));
             if (channels == AudioFormat.CHANNEL_IN_MONO) {
-                FileOperations.writetofile(av, samples, filename+".txt");
+                FileOperations.writetofile(MainActivity.av, samples, filename+".txt");
             }
             else if (channels == AudioFormat.CHANNEL_IN_STEREO) {
-                FileOperations.writetofile(av, samples1, filename+"-top.txt");
-                FileOperations.writetofile(av, samples2, filename+"-bottom.txt");
+                FileOperations.writetofile(MainActivity.av, samples1, filename+"-top.txt");
+                FileOperations.writetofile(MainActivity.av, samples2, filename+"-bottom.txt");
 
             }
 
             Constants.sensorFlag=false;
-            FileOperations.writeSensors(av,filename+".txt");
+            FileOperations.writeSensors(MainActivity.av,filename+".txt");
         }
     }
 
     public void run() {
+        Log.e("rec","rec");
         if (channels == AudioFormat.CHANNEL_IN_MONO) {
+            Log.e("rec","mono");
             count = 0;
             int bytesread;
             rec.startRecording();
@@ -128,10 +132,10 @@ public class OfflineRecorder extends Thread {
                         rec.stop();
                         rec.release();
                         recording = false;
-                        FileOperations.writetofile(av, samples, filename+".txt");
+                        FileOperations.writetofile(MainActivity.av, samples, filename+".txt");
 
                         Constants.sensorFlag=false;
-                        FileOperations.writeSensors(av,filename+".txt");
+                        FileOperations.writeSensors(MainActivity.av,filename+".txt");
                         break;
                     } else if (count < samples.length) {
                         samples[count] = temp[i];
@@ -143,6 +147,7 @@ public class OfflineRecorder extends Thread {
             }
         }
         else if (channels == AudioFormat.CHANNEL_IN_STEREO) {
+            Log.e("rec","stereo");
             count1 = 0;
             count2 = 0;
             int bytesread;
@@ -151,6 +156,7 @@ public class OfflineRecorder extends Thread {
             while (recording) {
                 bytesread = rec.read(temp, 0, minbuffersize);
                 if (count1 < samples1.length) {
+//                    Log.e("rec",count1+","+samples1.length);
                     for (int i = 0; i < bytesread; i+=2) {
                         if (count1 < samples1.length && count2 < samples2.length) {
                             if (android.os.Build.MODEL.equals("SM-N975U1")) {
@@ -187,9 +193,9 @@ public class OfflineRecorder extends Thread {
                     Constants.sensorFlag=false;
                     new Runnable() {
                         public void run() {
-                            FileOperations.writetofile(av, samples1, filename+"-top.txt");
-                            FileOperations.writetofile(av, samples2, filename+"-bottom.txt");
-                            FileOperations.writeSensors(av,filename+".txt");
+                            FileOperations.writetofile(MainActivity.av, samples1, filename+"-top.txt");
+                            FileOperations.writetofile(MainActivity.av, samples2, filename+"-bottom.txt");
+                            FileOperations.writeSensors(MainActivity.av,filename+".txt");
                         }
                     }.run();
                     break;
