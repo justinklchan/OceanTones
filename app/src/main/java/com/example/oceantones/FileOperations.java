@@ -7,8 +7,11 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -71,6 +74,38 @@ public class FileOperations {
             ar[counter++] = d;
         }
         ll.clear();
+
+        return ar;
+    }
+
+    public static short[] readrawasset_binary(Context context, int id) {
+        InputStream inp = context.getResources().openRawResource(id);
+        ArrayList<Integer> ll = new ArrayList<>();
+        int counter=0;
+        int byteRead=0;
+        try {
+            while ((byteRead = inp.read()) != -1) {
+                ll.add(byteRead);
+                counter += 1;
+                if (counter % 1000 == 0) {
+                    Log.e("asdf", counter + "");
+                }
+            }
+            inp.close();
+        }
+        catch(Exception e) {
+            Log.e("asdf",e.getMessage());
+        }
+        short[] ar = new short[ll.size()/2];
+
+        counter=0;
+        for (int i = 0; i < ll.size(); i+=2) {
+            int out=ll.get(i)+ll.get(i+1)*256;
+            if (out > 32767) {
+                out=out-65536;
+            }
+            ar[counter++]=(short)out;
+        }
 
         return ar;
     }

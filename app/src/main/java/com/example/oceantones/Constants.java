@@ -109,7 +109,7 @@ public class Constants {
 
         aa.put(51,36);
         aa.put(52,36*2);
-        aa.put(53,3);
+        aa.put(53,36*3);
 
 //        aa.put(47,18);
 //        aa.put(48,18);
@@ -121,8 +121,8 @@ public class Constants {
         Constants.stopb.setEnabled(true);
         Constants.prepb.setEnabled(false);
         Constants.sw1.setEnabled(false);
-        Constants.sw2.setEnabled(false);
-        Constants.sw3.setEnabled(false);
+//        Constants.sw2.setEnabled(false);
+//        Constants.sw3.setEnabled(false);
         Constants.sw4.setEnabled(false);
         Constants.et1.setEnabled(false);
         Constants.et2.setEnabled(false);
@@ -138,8 +138,8 @@ public class Constants {
         stopb.setEnabled(false);
         prepb.setEnabled(true);
         Constants.sw1.setEnabled(true);
-        Constants.sw2.setEnabled(true);
-        Constants.sw3.setEnabled(true);
+//        Constants.sw2.setEnabled(true);
+//        Constants.sw3.setEnabled(true);
         Constants.sw4.setEnabled(true);
 
         Constants.et1.setEnabled(true);
@@ -498,39 +498,44 @@ public class Constants {
 //            tv2.setText("single_signal_debug3_960_0_268_1000_3000_data");
 //            Constants.mode="mp";
 //        }
-        if (Constants.file_num==49) {
-            Constants.pulse = SendChirpAsyncTask.continuouspulse(
-                        .15, 1800,
-                        4400, .25,
-                        Constants.SamplingRate,
-                        Constants.scale1);
+//        if (Constants.file_num==49) {
+//            Constants.pulse = SendChirpAsyncTask.continuouspulse(
+//                        .15, 1800,
+//                        4400, .25,
+//                        Constants.SamplingRate,
+//                        Constants.scale1);
+//            tv2.setText("chirp");
+//            Constants.mode="ofdm";
+//        }
+//        if (Constants.file_num==50) {
+//            Constants.pulse = FileOperations.readrawasset(context, R.raw.preamble_1000);
+//            tv2.setText("preamble100");
+//            Constants.mode="mp";
+//        }
+//        if (Constants.file_num==51||Constants.file_num==52||Constants.file_num==53) {
+//            if (Constants.gap) {
+//                Constants.pulse = FileOperations.readrawasset(context, R.raw.chirps2);
+//                Log.e("asdf","chirps1");
+//            }
+//            else {
+//                Constants.pulse = FileOperations.readrawasset(context, R.raw.chirps1);
+//                Log.e("asdf","chirps2");
+//            }
+//            tv2.setText("chirps");
+//            Constants.mode="ofdm";
+//
+//            prep(context);
+//        }
+        if (Constants.file_num==54) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.preambles);
             tv2.setText("chirp");
             Constants.mode="ofdm";
         }
-        if (Constants.file_num==50) {
-            Constants.pulse = FileOperations.readrawasset(context, R.raw.preamble_1000);
-            tv2.setText("preamble100");
-            Constants.mode="mp";
-        }
-        if (Constants.file_num==51||Constants.file_num==52) {
-            if (Constants.gap) {
-                Constants.pulse = FileOperations.readrawasset(context, R.raw.chirps2);
-                Log.e("asdf","chirps1");
-            }
-            else {
-                Constants.pulse = FileOperations.readrawasset(context, R.raw.chirps1);
-                Log.e("asdf","chirps2");
-            }
-            tv2.setText("chirps");
-            Constants.mode="ofdm";
-
-            prep(context);
-        }
-        if (Constants.file_num==53) {
-            Constants.pulse = FileOperations.readrawasset(context, R.raw.short2);
-            Constants.mode="ofdm";
-            prep(context);
-        }
+//        if (Constants.file_num==53) {
+//            Constants.pulse = FileOperations.readrawasset(context, R.raw.short2);
+//            Constants.mode="ofdm";
+//            prep(context);
+//        }
 
 //        if (Constants.file_num==44) {
 //            Constants.pulse = FileOperations.readrawasset(context, R.raw.preamble_len_check);

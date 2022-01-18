@@ -10,6 +10,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,12 +27,14 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import java.io.File;
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -288,9 +291,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(av).edit();
                 String ss = Constants.et4.getText().toString();
                 if (ss.length()>0) {
-                    editor.putInt("init_sleep", Integer.parseInt(ss));
+                    int time = Integer.parseInt(ss);
+                    if (time >= 30) {
+                        time = 30;
+                    }
+                    editor.putInt("init_sleep", time);
                     editor.commit();
-                    Constants.init_sleep = Integer.parseInt(ss);
+                    Constants.init_sleep = time;
                 }
             }
         });
@@ -395,6 +402,38 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //                            .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
 //            startActivity(intent);
 //        }
+
+//        email();
+    }
+
+    public void email() {
+
+        Log.e("asdf","asdf1");
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"chan.justin.hk@gmail.com"});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "subject here");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "body text");
+
+        String dir = getExternalFilesDir(null).toString();
+        File file = new File(dir + File.separator + "1641268359195-bottom.txt");
+
+        FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
+                BuildConfig.APPLICATION_ID + ".provider", file);
+
+        Uri uri = FileProvider.getUriForFile(
+                MainActivity.this,
+                "com.example.oceantones", //(use your app signature + ".provider" )
+                file);
+
+        Log.e("asdf",uri.toString());
+
+//        if (!file.exists() || !file.canRead()) {
+//            return;
+//        }
+//        Uri uri = Uri.fromFile(file);
+        emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        startActivity(Intent.createChooser(emailIntent, "Pick an Email provider"));
     }
 
     protected void onPause() {
@@ -491,15 +530,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         else {
             Log.e("asdf", "option 2");
             String ts= "";
-            if (Constants.sp1 == null) {
-                Log.e("asdf", "2a");
+//            if (Constants.sp1 == null) {
+//                Log.e("asdf", "2a");
                 ts = System.currentTimeMillis() + "";
                 Constants.ts = ts;
-            }
-            else {
-                Log.e("asdf", "2b");
-                ts = Constants.ts;
-            }
+//            }
+//            else {
+//                Log.e("asdf", "2b");
+//                ts = Constants.ts;
+//            }
             String trim = ts.substring(ts.length() - 4, ts.length());
             bigts+=trim+"\n";
             tv1.setText(bigts);
