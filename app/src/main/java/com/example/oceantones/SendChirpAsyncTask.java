@@ -460,7 +460,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
 //            if (Constants.gap) {
 //                Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 96000, false);
 //            } else {
-                Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 96000, false);
+                Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, 1, 96000, false);
 //            }
 //        }
 

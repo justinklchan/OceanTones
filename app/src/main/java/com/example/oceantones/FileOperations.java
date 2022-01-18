@@ -2,6 +2,7 @@ package com.example.oceantones;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -21,6 +22,10 @@ public class FileOperations {
         Log.e("asdf","writetofile "+(buff==null));
         try {
             String dir = av.getExternalFilesDir(null).toString();
+            if (android.os.Build.MODEL.equals("SM-R870")) {
+                dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
+            }
+
             writetofile(dir, buff, filename);
 
         } catch(Exception e) {
@@ -63,9 +68,9 @@ public class FileOperations {
         while (inp.hasNextLine()) {
             ll.add(Short.parseShort(inp.nextLine()));
             counter += 1;
-            if (counter%1000==0) {
-                Log.e("asdf",counter+"");
-            }
+//            if (counter%1000==0) {
+//                Log.e("asdf",counter+"");
+//            }
         }
         inp.close();
         short[] ar = new short[ll.size()];
@@ -87,9 +92,9 @@ public class FileOperations {
             while ((byteRead = inp.read()) != -1) {
                 ll.add(byteRead);
                 counter += 1;
-                if (counter % 1000 == 0) {
-                    Log.e("asdf", counter + "");
-                }
+//                if (counter % 1000 == 0) {
+//                    Log.e("asdf", counter + "");
+//                }
             }
             inp.close();
         }

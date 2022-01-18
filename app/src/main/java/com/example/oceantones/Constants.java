@@ -4,12 +4,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.core.widget.NestedScrollView;
 
 import java.io.File;
 import java.util.HashMap;
@@ -22,6 +26,7 @@ public class Constants {
     public static OfflineRecorder _OfflineRecorder;
     public static EditText et1,et2,et3,et4,et5,et6,et7,et8;
     public static Button startb, stopb,prepb;
+    public static NestedScrollView sview;
     public static float scale1=1f,scale2=1f,gap_len=.5f;
     public static int file_num=51,init_sleep=5,tone_len=5,freq_lim=18000,reps=1;
     public static boolean transmit=true;
@@ -110,6 +115,7 @@ public class Constants {
         aa.put(51,36);
         aa.put(52,36*2);
         aa.put(53,36*3);
+        aa.put(55,56);
 
 //        aa.put(47,18);
 //        aa.put(48,18);
@@ -152,7 +158,7 @@ public class Constants {
     }
 
     public static CountDownTimer timer;
-    public static TextView tv3,tv12,tv13;
+    public static TextView tv3,tv12,tv13,tv5;
     public static int fidxRepeat=0;
     public static SendChirpAsyncTask task;
 
@@ -531,6 +537,11 @@ public class Constants {
             tv2.setText("chirp");
             Constants.mode="ofdm";
         }
+        if (Constants.file_num==55) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.out);
+            tv2.setText("chirp");
+            Constants.mode="ofdm";
+        }
 //        if (Constants.file_num==53) {
 //            Constants.pulse = FileOperations.readrawasset(context, R.raw.short2);
 //            Constants.mode="ofdm";
@@ -586,30 +597,39 @@ public class Constants {
 
     public static void prep(Context context) {
         Log.e("asdf","prep");
-        if (Constants.gap) {
-            Constants.sp1 = new AudioSpeaker(context, Constants.pulse, 48000, -1, 0, false);
-        }
-        else {
-            Constants.sp1 = new AudioSpeaker(context, Constants.pulse, 48000, -1, 0, false);
-        }
+//        if (Constants.gap) {
+//            Constants.sp1 = new AudioSpeaker(context, Constants.pulse, 48000, -1, 0, false);
+//        }
+//        else {
+//            Constants.sp1 = new AudioSpeaker(context, Constants.pulse, 48000, -1, 0, false);
+//        }
+//
+//        int pulse_length = Constants.tone_len*Constants.SamplingRate;
+//        int record_length = pulse_length;
+////            if (initSleep) {
+//        record_length += (Constants.init_sleep*Constants.SamplingRate);
+////            }
+//        Constants.ts = System.currentTimeMillis()+"";
+//        Constants._OfflineRecorder = new OfflineRecorder(context, Constants.SamplingRate, record_length, Constants.ts);
 
-        int pulse_length = Constants.tone_len*Constants.SamplingRate;
-        int record_length = pulse_length;
-//            if (initSleep) {
-        record_length += (Constants.init_sleep*Constants.SamplingRate);
-//            }
-        Constants.ts = System.currentTimeMillis()+"";
-        Constants._OfflineRecorder = new OfflineRecorder(context, Constants.SamplingRate, record_length, Constants.ts);
-
+        String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
 //        String dir = context.getExternalFilesDir(null).toString();
-//        File directory = new File(dir);
-//        File[] files = directory.listFiles();
-//        Log.e("Files", "Size: "+ files.length);
-//        for (int i = files.length-2; i < files.length; i++) {
-//            Log.e("Files", "FileName:" + files[i].getName());
+        File directory = new File(dir);
+        File[] files = directory.listFiles();
+        Log.e("Files", "Size: "+ files.length);
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].getName().contains("bottom")) {
+                Constants.tv5.setText(Constants.tv5.getText() + "\n" + files[i].getName());
+                Log.e("Files", "FileName:" + files[i].getName());
+            }
 //            FileOperations.readfromfile(MainActivity.av,files[i].getName());
 //            break;
-//        }
+        }
+        Constants.sview.post(new Runnable() {
+            public void run() {
+                Constants.sview.smoothScrollTo(0, Constants.tv5.getBottom());
+            }
+        });
     }
 
     public static void setTimer(Context context) {
