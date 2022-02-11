@@ -1,4 +1,10 @@
-1962
+1962sig3');
+
+spec=mag2db(abs(fft(s)));
+xx=linspace(0,48e3,length(spec));
+
+figure
+plot(s)
 3916
 5853
 7765

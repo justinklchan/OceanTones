@@ -117,6 +117,12 @@ public class Constants {
         aa.put(53,36*3);
         aa.put(55,56);
 
+        aa.put(56,30);
+        aa.put(57,30);
+        aa.put(58,30);
+        aa.put(59,30);
+        aa.put(60,60*10);
+
 //        aa.put(47,18);
 //        aa.put(48,18);
 //        aa.put(49,18);
@@ -540,6 +546,35 @@ public class Constants {
         if (Constants.file_num==55) {
             Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.out);
             tv2.setText("chirp");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==56) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.ofdm_sym);
+            tv2.setText("ofdm");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==57) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.full_sig);
+            tv2.setText("ofdm");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==58) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.preamble);
+            tv2.setText("ofdm");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==59) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.naiser);
+            tv2.setText("ofdm");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==60) {
+            Constants.pulse = SendChirpAsyncTask.continuouspulse(
+                        .15, 1800,
+                        4400, .25,
+                        Constants.SamplingRate,
+                        Constants.scale1);
+            tv2.setText("ofdm");
             Constants.mode="ofdm";
         }
 //        if (Constants.file_num==53) {
