@@ -451,7 +451,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
             record_length += (Constants.init_sleep*Constants.SamplingRate);
         }
 
-        if (Constants.sp1 == null) {
+//        if (Constants.sp1 == null) {
             Log.e("asdf","initializing recorder");
             Log.e("asdf", "RECORD " + record_length);
             Constants._OfflineRecorder = new OfflineRecorder(av, Constants.SamplingRate, record_length, Constants.ts);
@@ -462,7 +462,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
 //            } else {
                 Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 0, false);
 //            }
-        }
+//        }
 
         Constants._OfflineRecorder.start();
 

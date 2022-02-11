@@ -121,7 +121,7 @@ public class Constants {
         aa.put(57,30);
         aa.put(58,30);
         aa.put(59,30);
-        aa.put(60,60*10);
+        aa.put(60,30);
 
 //        aa.put(47,18);
 //        aa.put(48,18);
