@@ -451,20 +451,20 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
             record_length += (Constants.init_sleep*Constants.SamplingRate);
         }
 
-//        if (Constants.sp1 == null) {
-//            Log.e("asdf","initializing recorder");
-//            Log.e("asdf", "RECORD " + record_length);
-//            Constants._OfflineRecorder = new OfflineRecorder(av, Constants.SamplingRate, record_length, Constants.ts);
-//            Log.e("asdf", "STATE " + Constants._OfflineRecorder.getState() + "," + Constants._OfflineRecorder.rec.getRecordingState());
+        if (Constants.sp1 == null) {
+            Log.e("asdf","initializing recorder");
+            Log.e("asdf", "RECORD " + record_length);
+            Constants._OfflineRecorder = new OfflineRecorder(av, Constants.SamplingRate, record_length, Constants.ts);
+            Log.e("asdf", "STATE " + Constants._OfflineRecorder.getState() + "," + Constants._OfflineRecorder.rec.getRecordingState());
 
-//            if (Constants.gap) {
-//                Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 96000, false);
-//            } else {
+            if (Constants.gap) {
+                Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 96000, false);
+            } else {
                 Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 0, false);
-//            }
-//        }
+            }
+        }
 
-//        Constants._OfflineRecorder.start();
+        Constants._OfflineRecorder.start();
 
         if (initSleep) {
             Log.e("asdf", "init sleep ofdm");

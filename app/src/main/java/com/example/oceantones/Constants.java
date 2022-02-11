@@ -570,10 +570,10 @@ public class Constants {
         }
         if (Constants.file_num==60) {
             Constants.pulse = SendChirpAsyncTask.continuouspulse(
-                        .15, 1800,
-                        4400, .25,
-                        Constants.SamplingRate,
-                        Constants.scale1);
+                    .15, 1800,
+                    4400, .25,
+                    Constants.SamplingRate,
+                    Constants.scale1);
             tv2.setText("ofdm");
             Constants.mode="ofdm";
         }
