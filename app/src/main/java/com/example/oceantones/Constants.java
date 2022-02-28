@@ -121,8 +121,34 @@ public class Constants {
         aa.put(57,30);
         aa.put(58,30);
         aa.put(59,30);
-        aa.put(60,30);
+        aa.put(60,7);
+        aa.put(61,7);
+        aa.put(62,7);
+        aa.put(67,20);
 
+
+        aa.put(64,30);
+        aa.put(66,30);
+
+        aa.put(68,20);
+        aa.put(69,20);
+        aa.put(70,20);
+        aa.put(71,20);
+        aa.put(72,20);
+        aa.put(73,20);
+        aa.put(74,20);
+        aa.put(75,20);
+        aa.put(76,20);
+        aa.put(77,20);
+
+        aa.put(78,32);
+        aa.put(79,32);
+        aa.put(80,32);
+        aa.put(81,32);
+        aa.put(82,1);
+        aa.put(83,32);
+        aa.put(84,32);
+        aa.put(85,32);
 //        aa.put(47,18);
 //        aa.put(48,18);
 //        aa.put(49,18);
@@ -570,11 +596,193 @@ public class Constants {
         }
         if (Constants.file_num==60) {
             Constants.pulse = SendChirpAsyncTask.continuouspulse(
-                    .15, 1800,
-                    4400, .25,
+                    .15, 1000,
+                    5000, .25,
                     Constants.SamplingRate,
                     Constants.scale1);
             tv2.setText("ofdm");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==61) {
+            Constants.pulse = SendChirpAsyncTask.continuouspulse(
+                    .15, 5000,
+                    1000, .25,
+                    Constants.SamplingRate,
+                    Constants.scale1);
+            tv2.setText("ofdm");
+            Constants.mode="ofdm";
+        }
+//        if (Constants.file_num==62) {
+//            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.naiser_120_preamble);
+//            tv2.setText("120");
+//            Constants.mode="ofdm";
+//        }
+//        if (Constants.file_num==63) {
+//            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.naiser_240_preamble);
+//            tv2.setText("240");
+//            Constants.mode="ofdm";
+//        }
+        if (Constants.file_num==64) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.naiser_480_preamble);
+            Constants.pulse = new short[48000*7+pre.length];
+            for (int i = 0; i < pre.length; i++) {
+                Constants.pulse[i] = pre[i];
+            }
+
+            short[] c=Chirp.generateChirpSpeaker(200,200,.25,48e3,0,1.0);
+            int counter=0;
+            for (int i = pre.length; i < pre.length+12000; i++) {
+                Constants.pulse[i] = c[counter++];
+            }
+            tv2.setText("480");
+            Constants.mode="ofdm";
+        }
+//        if (Constants.file_num==65) {
+//            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.naiser_120_long_preamble);
+//            tv2.setText("120_long");
+//            Constants.mode="ofdm";
+//        }
+        if (Constants.file_num==66) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.naiser_240_long_preamble);
+            short[] c=Chirp.generateChirpSpeaker(200,200,2,48e3,0,.05);
+            Constants.pulse = new short[48000*5+pre.length+c.length];
+            for (int i = 0; i < pre.length; i++) {
+                Constants.pulse[i] = pre[i];
+            }
+
+            int counter=0;
+            for (int i = pre.length; i < pre.length+c.length; i++) {
+                Constants.pulse[i] = c[counter++];
+            }
+
+            tv2.setText("240_long");
+            Constants.mode="ofdm";
+        }
+        /////////////////////////////////
+        if (Constants.file_num==68) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.mseq_128_1);
+            tv2.setText("mseq128_1");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==69) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.mseq_256_1);
+            tv2.setText("mseq256_1");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==70) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.mseq_256_2);
+            tv2.setText("mseq256_2");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==71) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.mseq_512_1);
+            tv2.setText("mseq512_1");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==72) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.mseq_512_2);
+            tv2.setText("mseq512_2");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==73) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.new_512);
+            tv2.setText("new_512");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==74) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.naiser_120);
+            tv2.setText("naiser_120");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==75) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.naiser_240);
+            tv2.setText("naiser_240");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==76) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.naiser_480);
+            tv2.setText("naiser_480");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==77) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.long_240);
+            tv2.setText("naiser_long_240");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==78) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.naiser_60_420);
+            warmdown(pre);
+            tv2.setText("naiser_60_420");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==79) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.naiser_120_360);
+            warmdown(pre);
+            tv2.setText("naiser_120_360");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==80) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.naiser_long_60_420);
+            warmdown(pre);
+            tv2.setText("naiser_long_60_420");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==81) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.naiser_long_120_360);
+            warmdown(pre);
+            tv2.setText("naiser_long_120_360");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==82) {
+            short[] temp = FileOperations.readrawasset_binary(context, R.raw.chirp);
+            Constants.pulse = new short[4800];
+            for (int i = 43200 ; i < temp.length; i++) {
+                Constants.pulse[i] = temp[i];
+            }
+//            warmdown(pre);
+            tv2.setText("chirp");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==83) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.training_symbol);
+//            warmdown(pre);
+            tv2.setText("training_symbol");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==84) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.training_symbol2);
+//            warmdown(pre);
+            tv2.setText("training_symbol");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==85) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.chirp3);
+//            warmdown(pre);
+            tv2.setText("chirp3");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==86) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.naiser);
+//            warmdown(pre);
+            tv2.setText("chirp3");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==87) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.vol_100);
+//            warmdown(pre);
+            tv2.setText("chirp3");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==88) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.vol_300);
+//            warmdown(pre);
+            tv2.setText("chirp3");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==89) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.vol_500);
+//            warmdown(pre);
+            tv2.setText("chirp3");
             Constants.mode="ofdm";
         }
 //        if (Constants.file_num==53) {
@@ -665,6 +873,19 @@ public class Constants {
                 Constants.sview.smoothScrollTo(0, Constants.tv5.getBottom());
             }
         });
+    }
+
+    public static void warmdown(short[] pre) {
+        short[] c=Chirp.generateChirpSpeaker(200,200,1,48e3,0,.05);
+        Constants.pulse = new short[48000*5+pre.length+c.length];
+        for (int i = 0; i < pre.length; i++) {
+            Constants.pulse[i] = pre[i];
+        }
+
+        int counter=0;
+        for (int i = pre.length; i < pre.length+c.length; i++) {
+            Constants.pulse[i] = c[counter++];
+        }
     }
 
     public static void setTimer(Context context) {

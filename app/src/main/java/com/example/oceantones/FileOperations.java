@@ -33,7 +33,7 @@ public class FileOperations {
         }
     }
 
-    public static double[] readfromfile(Activity av, String filename) {
+    public static double[] readfromfreadfromfile(Activity av, String filename) {
         LinkedList<Double> ll = new LinkedList<Double>();
 
         try {
