@@ -236,7 +236,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
                 //            String pulse2_str=Arrays.toString(pulse2);
                 Log.e("asdf", "time " + (System.currentTimeMillis() - t1));
 
-                Constants.sp1 = new AudioSpeaker(av, pulse2, 48000, Constants.tone_len, preamble.length,false);
+                Constants.sp1 = new AudioSpeaker(av, pulse2, Constants.SamplingRate, Constants.tone_len, preamble.length,false);
                 Log.e("asdf", "play tone " + Constants.tones[i]);
 
                 int finalI = i;
@@ -362,7 +362,8 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         Log.e("asdf","STATE "+Constants._OfflineRecorder.getState()+","+Constants._OfflineRecorder.rec.getRecordingState());
         Constants._OfflineRecorder.start();
 
-        Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, Constants.reps-1, 48000*2,true);
+        Constants.sp1 = new AudioSpeaker(av, Constants.pulse, Constants.SamplingRate,
+                Constants.reps-1, Constants.SamplingRate*2,true);
 //        Constants.sp2 = new AudioSpeaker(av, Constants.pulse2, 48000, Constants.reps-1, 48000*2,true);
 
         if (initSleep) {
@@ -411,7 +412,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         Log.e("asdf","STATE "+Constants._OfflineRecorder.getState()+","+Constants._OfflineRecorder.rec.getRecordingState());
         Constants._OfflineRecorder.start();
 
-        Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, 0, 0,false);
+        Constants.sp1 = new AudioSpeaker(av, Constants.pulse, Constants.SamplingRate, 0, 0,false);
 
         if (initSleep) {
             Log.e("asdf", "init sleep");
@@ -460,7 +461,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
 //            if (Constants.gap) {
 //                Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 96000, false);
 //            } else {
-                Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, 1, 0, false);
+                Constants.sp1 = new AudioSpeaker(av, Constants.pulse, Constants.SamplingRate, 0, 0, false);
 //            }
 //        }
 
@@ -505,7 +506,8 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
 //        Constants._OfflineRecorder.start();
 
         if (Constants.transmit) {
-            Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 48000 * 2, false);
+            Constants.sp1 = new AudioSpeaker(av, Constants.pulse, Constants.SamplingRate, -1,
+                    Constants.SamplingRate * 2, false);
         }
 
 //        Log.e("asdf","RECORD "+record_length);

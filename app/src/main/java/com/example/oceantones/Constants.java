@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Constants {
-    public static int SamplingRate=48000;
+    public static int SamplingRate=44100;
     public static AudioSpeaker sp1;
     public static AudioSpeaker sp2;
     public static OfflineRecorder _OfflineRecorder;
@@ -756,7 +756,7 @@ public class Constants {
             Constants.mode="ofdm";
         }
         if (Constants.file_num==85) {
-            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.chirp3);
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.chirp_1_5);
 //            warmdown(pre);
             tv2.setText("chirp3");
             Constants.mode="ofdm";
@@ -783,6 +783,42 @@ public class Constants {
             Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.vol_500);
 //            warmdown(pre);
             tv2.setText("chirp3");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==90) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.online1);
+//            warmdown(pre);
+            tv2.setText("online1");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==91) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.online2);
+//            warmdown(pre);
+            tv2.setText("online2");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==92) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.online3);
+//            warmdown(pre);
+            tv2.setText("online3");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==93) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.signal_720_360_cp);
+            warmup(pre);
+            tv2.setText("signal_720_360_cp");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==94) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.signal_720_360_gi);
+            warmup(pre);
+            tv2.setText("signal_720_360_gi");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==95) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.signal_720_360_half);
+            warmup(pre);
+            tv2.setText("signal_720_360_half");
             Constants.mode="ofdm";
         }
 //        if (Constants.file_num==53) {
@@ -885,6 +921,21 @@ public class Constants {
         int counter=0;
         for (int i = pre.length; i < pre.length+c.length; i++) {
             Constants.pulse[i] = c[counter++];
+        }
+    }
+
+    public static void warmup(short[] pre) {
+        int gap_len=2000;
+        int freq = 1000;
+        int warmup_len=Constants.SamplingRate;
+        Constants.pulse = new short[pre.length+warmup_len+gap_len];
+        for (int i = 0; i < warmup_len; i++) {
+            Constants.pulse[i] = (short)(Math.sin(2 * Math.PI * freq * ((double)i / Constants.SamplingRate))*32767.0*Constants.scale1);
+        }
+
+        int counter=0;
+        for (int i = warmup_len+gap_len; i < Constants.pulse.length; i++) {
+            Constants.pulse[i]=pre[counter++];
         }
     }
 
