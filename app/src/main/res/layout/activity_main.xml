@@ -18,6 +18,7 @@
         android:layout_marginTop="40dp"
         android:onClick="onstop"
         android:text="stop"
+        android:height="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button3" />
 
@@ -37,6 +38,7 @@
         android:layout_marginTop="100dp"
         android:onClick="onstart"
         android:text="start"
+        android:height="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -99,9 +101,10 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="50dp"
         android:text="TextView"
         android:textSize="30dp"
-        app:layout_constraintBottom_toBottomOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -317,6 +320,7 @@
         android:layout_marginTop="40dp"
         android:onClick="prep"
         android:text="prep"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />
 

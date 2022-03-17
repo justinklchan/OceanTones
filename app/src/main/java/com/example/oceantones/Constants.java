@@ -821,6 +821,12 @@ public class Constants {
             tv2.setText("signal_720_360_half");
             Constants.mode="ofdm";
         }
+        if (Constants.file_num==96) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.n_1260_480_half_signal);
+            warmup(pre);
+            tv2.setText("signal_N_1260_480_HALF");
+            Constants.mode="ofdm";
+        }
 //        if (Constants.file_num==53) {
 //            Constants.pulse = FileOperations.readrawasset(context, R.raw.short2);
 //            Constants.mode="ofdm";
@@ -926,7 +932,7 @@ public class Constants {
 
     public static void warmup(short[] pre) {
         int gap_len=2000;
-        int freq = 1000;
+        int freq = 500;
         int warmup_len=Constants.SamplingRate;
         Constants.pulse = new short[pre.length+warmup_len+gap_len];
         for (int i = 0; i < warmup_len; i++) {
