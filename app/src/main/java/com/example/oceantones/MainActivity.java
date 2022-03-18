@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_FASTEST);
         sensorManager.registerListener(this, rotate, SensorManager.SENSOR_DELAY_FASTEST);
 
+        Constants.clayout=findViewById(R.id.clayout);
         Constants.et1=findViewById(R.id.editTextNumber);
         Constants.et2=findViewById(R.id.editTextNumber2);
         Constants.et3=findViewById(R.id.editTextNumber3);

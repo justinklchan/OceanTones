@@ -13,6 +13,7 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 
 import java.io.File;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Constants {
+    public static ConstraintLayout clayout;
     public static int SamplingRate=44100;
     public static AudioSpeaker sp1;
     public static AudioSpeaker sp2;
