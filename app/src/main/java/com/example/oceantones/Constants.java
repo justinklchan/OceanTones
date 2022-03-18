@@ -824,7 +824,74 @@ public class Constants {
         if (Constants.file_num==96) {
             short[] pre = FileOperations.readrawasset_binary(context, R.raw.n_1260_480_half_signal);
             warmup(pre);
-            tv2.setText("signal_N_1260_480_HALF");
+            tv2.setText("n_1260_480_half_signal");
+            Constants.mode="ofdm";
+        }
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+        if (Constants.file_num==97) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.signal_960_360_1000_3000);
+            warmup2(pre);
+            tv2.setText("signal_960_360_1000_3000");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==98) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.signal_960_360_1000_5000);
+            warmup2(pre);
+            tv2.setText("signal_960_360_1000_5000");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==99) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.signal_960_360_1000_9000);
+            warmup2(pre);
+            tv2.setText("signal_960_360_1000_9000");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==100) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.signal_1260_480_1000_3000);
+            warmup2(pre);
+            tv2.setText("signal_1260_480_1000_3000");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==101) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.signal_1260_480_1000_5000);
+            warmup2(pre);
+            tv2.setText("signal_1260_480_1000_5000");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==102) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.signal_1260_480_1000_6000);
+            warmup2(pre);
+            tv2.setText("signal_1260_480_1000_6000");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==103) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.signal_1260_480_1000_7000);
+            warmup2(pre);
+            tv2.setText("signal_1260_480_1000_7000");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==104) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.signal_1260_480_1000_9000);
+            warmup2(pre);
+            tv2.setText("signal_1260_480_1000_9000");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==105) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.signal_2160_480_1000_3000);
+            warmup2(pre);
+            tv2.setText("signal_2160_480_1000_3000");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==106) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.signal_2160_480_1000_5000);
+            warmup2(pre);
+            tv2.setText("signal_2160_480_1000_5000");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==107) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.signal_2160_480_1000_9000);
+            warmup2(pre);
+            tv2.setText("signal_2160_480_1000_9000");
             Constants.mode="ofdm";
         }
 //        if (Constants.file_num==53) {
@@ -942,6 +1009,16 @@ public class Constants {
         int counter=0;
         for (int i = warmup_len+gap_len; i < Constants.pulse.length; i++) {
             Constants.pulse[i]=pre[counter++];
+        }
+    }
+
+    public static void warmup2(short[] pre) {
+        int gap_len=(int)(Constants.gap_len*Constants.SamplingRate);
+        Constants.pulse = new short[pre.length+gap_len];
+
+        int counter=0;
+        for (int i = 0; i < pre.length; i++) {
+            Constants.pulse[i] = pre[counter++];
         }
     }
 
