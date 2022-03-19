@@ -481,7 +481,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
 
         int stime = (int) ((Constants.pulse.length / (double) Constants.SamplingRate) * 1000);
 //        int glen=(int)(Constants.gap_len*Constants.SamplingRate);
-        int numloops = pulse_length/stime;
+        int numloops = (int)(Constants.tone_len/(stime/1000.0));
 
         for (int i = 0; i < numloops; i++) {
             Log.e("asdf","loop "+i);
