@@ -171,6 +171,7 @@ public class Constants {
         Constants.et5.setEnabled(false);
         Constants.et6.setEnabled(false);
         Constants.et7.setEnabled(false);
+        Constants.et8.setEnabled(false);
     }
 
     public static void enableUI() {
@@ -189,6 +190,7 @@ public class Constants {
         Constants.et5.setEnabled(true);
         Constants.et6.setEnabled(true);
 //        Constants.et7.setEnabled(true);
+        Constants.et8.setEnabled(true);
     }
 
     public static CountDownTimer timer;

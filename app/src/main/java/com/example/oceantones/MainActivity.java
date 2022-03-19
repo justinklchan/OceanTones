@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -588,6 +589,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 break;
             }
         }
+        Constants.clayout.setBackgroundColor(Color.argb(255, 255, 255, 255));
     }
 
     @Override

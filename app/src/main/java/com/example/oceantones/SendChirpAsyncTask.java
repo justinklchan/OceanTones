@@ -482,12 +482,18 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         int stime = (int) ((Constants.pulse.length / (double) Constants.SamplingRate) * 1000);
 //        int glen=(int)(Constants.gap_len*Constants.SamplingRate);
         int numloops = (int)(Constants.tone_len/(stime/1000.0));
-
+//
+//        try {
+//            Log.e("asdf", "sleep for " + (stime));
+//            Thread.sleep((long) stime*numloops);
+//        } catch (Exception e) {
+//            Log.e("asdf", e.getMessage());
+//        }
         for (int i = 0; i < numloops; i++) {
-            Log.e("asdf","loop "+i);
             if (Constants.transmit) {
                 Constants.sp1.play(Constants.scale2);
             }
+            Log.e("asdf","loop "+i);
 
             try {
                 Log.e("asdf", "sleep for " + (stime));
@@ -495,7 +501,6 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
             } catch (Exception e) {
                 Log.e("asdf", e.getMessage());
             }
-            Constants.sp1.reset();
 
             int finalI = i;
             (MainActivity.av).runOnUiThread(new Runnable() {
@@ -514,6 +519,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
                     }
                 }
             });
+            Constants.sp1.reset();
         }
 
 //        try {
