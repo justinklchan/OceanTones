@@ -548,7 +548,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
 
         int counter=Constants.pulse.length;
         for (int i = 0; i < 6; i++) {
-            int f = 1000;
+            int f = 1500;
             if (ID.ids[id][i] == 1) {
                 f=2000;
             }
