@@ -23,6 +23,7 @@ import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Constants.tv13 = findViewById(R.id.textView13);
         Constants.tv3 = findViewById(R.id.textView9);
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         Constants.tv5 = (TextView) findViewById(R.id.debugPane);
         Constants.sview = (NestedScrollView) findViewById(R.id.scrollView);
         Constants.tv5.setMovementMethod(new ScrollingMovementMethod());
