@@ -335,6 +335,10 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
             Constants.setTimer(av);
             ofdmhelper(true);
         }
+        else if (Constants.mode.equals("multi")) {
+            Constants.setTimer(av);
+            multihelper(true);
+        }
         else if (Constants.mode.equals("rc")) {
             Constants.setTimer(av);
             rchelper(true);
@@ -491,6 +495,117 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
 //        }
         for (int i = 0; i < numloops; i++) {
             if (Constants.transmit) {
+                Constants.sp1.play(Constants.scale2);
+            }
+            Log.e("asdf","loop "+i);
+
+            try {
+                Log.e("asdf", "sleep for " + (stime));
+                Thread.sleep((long) stime);
+            } catch (Exception e) {
+                Log.e("asdf", e.getMessage());
+            }
+
+            int finalI = i;
+            (MainActivity.av).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (finalI %2==0) {
+                        Constants.clayout.setBackgroundColor(Color.argb(255, 255, 0, 0));
+                    }
+                    else {
+                        if (Build.MODEL.equals("Pixel 3a XL")) {
+                            Constants.clayout.setBackgroundColor(Color.argb(255, 0, 0, 0));
+                        }
+                        else {
+                            Constants.clayout.setBackgroundColor(Color.argb(255, 255, 255, 255));
+                        }
+                    }
+                }
+            });
+            Constants.sp1.reset();
+        }
+
+//        try {
+//            int stime = (pulse_length/Constants.SamplingRate)*1000;
+//            Log.e("asdf", "sleep for " + stime);
+//            Thread.sleep((long) stime);
+//        } catch (Exception e) {
+//            Log.e("asdf", e.getMessage());
+//        }
+        Constants.sp1.reset();
+        Constants.sp1 = null;
+    }
+
+    public short[] newpulse(int id) {
+        int idlen=(int)(Constants.SamplingRate*.3);
+        int gap_len=(int)(Constants.gap_len*Constants.SamplingRate);
+
+        short[] out = new short[Constants.pulse.length+idlen+gap_len];
+        for (int i = 0; i < Constants.pulse.length; i++) {
+            out[i] = Constants.pulse[i];
+        }
+
+        int counter=Constants.pulse.length;
+        for (int i = 0; i < 6; i++) {
+            int f = 1000;
+            if (ID.ids[id][i] == 1) {
+                f=2000;
+            }
+            short[] idsig = Chirp.generateChirpSpeaker(f, f, .05, Constants.SamplingRate, 0,1);
+            for (int j = 0; j < idsig.length; j++) {
+                out[counter++] = idsig[j];
+            }
+        }
+
+        return out;
+    }
+
+    public void multihelper(boolean initSleep) {
+        Log.e("asdf","ofdmhelper");
+        Constants.acc = new LinkedList<>();
+        Constants.gyro = new LinkedList<>();
+        Constants.azimuth = new LinkedList<>();
+        Constants.pitch = new LinkedList<>();
+        Constants.sensorFlag=true;
+
+        int pulse_length = Constants.tone_len*Constants.SamplingRate;
+        int record_length = pulse_length;
+        if (initSleep) {
+            record_length += (Constants.init_sleep*Constants.SamplingRate);
+        }
+
+//        if (Constants.sp1 == null) {
+        Log.e("asdf","initializing recorder");
+        Log.e("asdf", "RECORD " + record_length);
+        Constants._OfflineRecorder = new OfflineRecorder(av, Constants.SamplingRate, record_length, Constants.ts);
+        Log.e("asdf", "STATE " + Constants._OfflineRecorder.getState() + "," + Constants._OfflineRecorder.rec.getRecordingState());
+
+//            if (Constants.gap) {
+//                Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 96000, false);
+//            } else {
+//            }
+//        }
+
+        Constants._OfflineRecorder.start();
+
+        if (initSleep) {
+            Log.e("asdf", "init sleep ofdm");
+            try {
+                Thread.sleep((long) (Constants.init_sleep * 1000));
+            } catch (Exception e) {
+                Log.e("asdf", e.getMessage());
+            }
+        }
+
+        short[] id=newpulse(0);
+        int stime = (int) ((id.length / (double) Constants.SamplingRate) * 1000);
+        int numloops = (int)(Constants.tone_len/(stime/1000.0));
+
+        for (int i = 0; i < numloops; i++) {
+            if (Constants.transmit) {
+                id=newpulse(i);
+                Constants.sp1 = new AudioSpeaker(av, id, Constants.SamplingRate, 0, 0, false);
                 Constants.sp1.play(Constants.scale2);
             }
             Log.e("asdf","loop "+i);

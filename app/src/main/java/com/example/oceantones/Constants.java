@@ -898,6 +898,37 @@ public class Constants {
             tv2.setText("signal_2160_480_1000_9000");
             Constants.mode="ofdm";
         }
+        if (Constants.file_num==108) {
+            Constants.pulse = Chirp.generateChirpSpeaker(1000, 1000, 1, 44100, 0, Constants.scale1);
+            tv2.setText("tone1000");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==109) {
+            Constants.pulse = Chirp.generateChirpSpeaker(2000, 2000, 1, 44100, 0, Constants.scale1);
+            tv2.setText("tone2000");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==110) {
+            Constants.pulse = Chirp.generateChirpSpeaker(3000, 3000, 1, 44100, 0, Constants.scale1);
+            tv2.setText("tone3000");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==111) {
+            Constants.pulse = Chirp.generateChirpSpeaker(4000, 4000, 1, 44100, 0, Constants.scale1);
+            tv2.setText("tone4000");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==112) {
+            Constants.pulse = Chirp.generateChirpSpeaker(5000, 5000, 1, 44100, 0, Constants.scale1);
+            tv2.setText("tone5000");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==113) {
+            Constants.pulse = FileOperations.readrawasset_binary(context, R.raw.signal_1260_480_1000_5000);
+//            warmup2(pre);
+            tv2.setText("signal_1260_480_1000_5000");
+            Constants.mode="multi";
+        }
 //        if (Constants.file_num==53) {
 //            Constants.pulse = FileOperations.readrawasset(context, R.raw.short2);
 //            Constants.mode="ofdm";
