@@ -538,7 +538,10 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
     }
 
     public short[] newpulse(int id) {
-        int idlen=(int)(Constants.SamplingRate*.3);
+        //50ms single tones, send 32 of them
+        double tonelen = 0.1;
+        double gaplen=0.05;
+        int idlen=(int)(Constants.SamplingRate*((tonelen+gaplen)*32));
         int gap_len=(int)(Constants.gap_len*Constants.SamplingRate);
 
         short[] out = new short[Constants.pulse.length+idlen+gap_len];
@@ -547,19 +550,41 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         }
 
         int counter=Constants.pulse.length;
-        for (int i = 0; i < 6; i++) {
-            int f = 1500;
-            if (ID.ids[id][i] == 1) {
-                f=2000;
-            }
-            short[] idsig = Chirp.generateChirpSpeaker(f, f, .05, Constants.SamplingRate, 0,1);
+        for (int i = 0; i < 32; i++) {
+            int f = 1500+(35*i);
+            short[] idsig = Chirp.generateChirpSpeaker(f, f, tonelen, Constants.SamplingRate, 0,1);
             for (int j = 0; j < idsig.length; j++) {
                 out[counter++] = idsig[j];
             }
+            counter += Constants.SamplingRate*gaplen;
         }
 
         return out;
     }
+
+//    public short[] newpulse(int id) {
+//        int idlen=(int)(Constants.SamplingRate*.3);
+//        int gap_len=(int)(Constants.gap_len*Constants.SamplingRate);
+//
+//        short[] out = new short[Constants.pulse.length+idlen+gap_len];
+//        for (int i = 0; i < Constants.pulse.length; i++) {
+//            out[i] = Constants.pulse[i];
+//        }
+//
+//        int counter=Constants.pulse.length;
+//        for (int i = 0; i < 6; i++) {
+//            int f = 1500;
+//            if (ID.ids[id][i] == 1) {
+//                f=2000;
+//            }
+//            short[] idsig = Chirp.generateChirpSpeaker(f, f, .05, Constants.SamplingRate, 0,1);
+//            for (int j = 0; j < idsig.length; j++) {
+//                out[counter++] = idsig[j];
+//            }
+//        }
+//
+//        return out;
+//    }
 
     public void multihelper(boolean initSleep) {
         Log.e("asdf","ofdmhelper");
@@ -599,6 +624,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         }
 
         short[] id=newpulse(0);
+        Log.e("debug1234",id.length+"");
         int stime = (int) ((id.length / (double) Constants.SamplingRate) * 1000);
         int numloops = (int)(Constants.tone_len/(stime/1000.0));
 
