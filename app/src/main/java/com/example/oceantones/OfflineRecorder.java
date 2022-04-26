@@ -132,6 +132,7 @@ public class OfflineRecorder extends Thread {
                         rec.stop();
                         rec.release();
                         recording = false;
+                        Log.e("rec","COMPLETE");
                         FileOperations.writetofile(MainActivity.av, samples, filename+".txt");
 
                         Constants.sensorFlag=false;
@@ -193,6 +194,7 @@ public class OfflineRecorder extends Thread {
                     Constants.sensorFlag=false;
                     new Runnable() {
                         public void run() {
+                            Log.e("asdf","write to file");
                             FileOperations.writetofile(MainActivity.av, samples1, filename+"-top.txt");
                             FileOperations.writetofile(MainActivity.av, samples2, filename+"-bottom.txt");
                             FileOperations.writeSensors(MainActivity.av,filename+".txt");

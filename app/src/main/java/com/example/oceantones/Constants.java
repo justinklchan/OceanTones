@@ -919,7 +919,7 @@ public class Constants {
             Constants.mode="ofdm";
         }
         if (Constants.file_num==112) {
-            Constants.pulse = Chirp.generateChirpSpeaker(5000, 5000, 1, 44100, 0, Constants.scale1);
+            Constants.pulse = Chirp.generateChirpSpeaker(1000, 15000, 1, 44100, 0, Constants.scale1);
             tv2.setText("tone5000");
             Constants.mode="ofdm";
         }
@@ -928,6 +928,16 @@ public class Constants {
 //            warmup2(pre);
             tv2.setText("signal_1260_480_1000_5000");
             Constants.mode="multi";
+        }
+        if (Constants.file_num==114) {
+            Constants.pulse = Chirp.generateChirpSpeaker(100, 6000, .01, 44100, 0, Constants.scale1);
+            tv2.setText("signal_1260_480_1000_5000");
+            Constants.mode="ofdm";
+        }
+        if (Constants.file_num==115) {
+            Constants.pulse = Chirp.generateChirpSpeaker(1000, 16000, .01, 44100, 0, Constants.scale1);
+            tv2.setText("signal_1260_480_1000_5000");
+            Constants.mode="ofdm";
         }
 //        if (Constants.file_num==53) {
 //            Constants.pulse = FileOperations.readrawasset(context, R.raw.short2);

@@ -467,6 +467,9 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
 //            if (Constants.gap) {
 //                Constants.sp1 = new AudioSpeaker(av, Constants.pulse, 48000, -1, 96000, false);
 //            } else {
+        int stime = (int) ((Constants.pulse.length / (double) Constants.SamplingRate) * 1000);
+//        int glen=(int)(Constants.gap_len*Constants.SamplingRate);
+        int numloops = (int)(Constants.tone_len/(stime/1000.0));
                 Constants.sp1 = new AudioSpeaker(av, Constants.pulse, Constants.SamplingRate, 0, 0, false);
 //            }
 //        }
@@ -482,30 +485,25 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
             }
         }
 
-
-        int stime = (int) ((Constants.pulse.length / (double) Constants.SamplingRate) * 1000);
-//        int glen=(int)(Constants.gap_len*Constants.SamplingRate);
-        int numloops = (int)(Constants.tone_len/(stime/1000.0));
-//
+        for (int i = 0; i < numloops; i++) {
+            if (Constants.transmit) {
+                Constants.sp1.play(Constants.scale2);
+            }
 //        try {
 //            Log.e("asdf", "sleep for " + (stime));
 //            Thread.sleep((long) stime*numloops);
 //        } catch (Exception e) {
 //            Log.e("asdf", e.getMessage());
 //        }
-        for (int i = 0; i < numloops; i++) {
-            if (Constants.transmit) {
-                Constants.sp1.play(Constants.scale2);
-            }
-            Log.e("asdf","loop "+i);
-
+//            Log.e("asdf","loop "+i);
+//
             try {
                 Log.e("asdf", "sleep for " + (stime));
                 Thread.sleep((long) stime);
             } catch (Exception e) {
                 Log.e("asdf", e.getMessage());
             }
-
+//
             int finalI = i;
             (MainActivity.av).runOnUiThread(new Runnable() {
                 @Override
@@ -628,40 +626,40 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         int stime = (int) ((id.length / (double) Constants.SamplingRate) * 1000);
         int numloops = (int)(Constants.tone_len/(stime/1000.0));
 
-        for (int i = 0; i < numloops; i++) {
-            if (Constants.transmit) {
-                id=newpulse(i);
-                Constants.sp1 = new AudioSpeaker(av, id, Constants.SamplingRate, 0, 0, false);
-                Constants.sp1.play(Constants.scale2);
-            }
-            Log.e("asdf","loop "+i);
-
-            try {
-                Log.e("asdf", "sleep for " + (stime));
-                Thread.sleep((long) stime);
-            } catch (Exception e) {
-                Log.e("asdf", e.getMessage());
-            }
-
-            int finalI = i;
-            (MainActivity.av).runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (finalI %2==0) {
-                        Constants.clayout.setBackgroundColor(Color.argb(255, 255, 0, 0));
-                    }
-                    else {
-                        if (Build.MODEL.equals("Pixel 3a XL")) {
-                            Constants.clayout.setBackgroundColor(Color.argb(255, 0, 0, 0));
-                        }
-                        else {
-                            Constants.clayout.setBackgroundColor(Color.argb(255, 255, 255, 255));
-                        }
-                    }
-                }
-            });
-            Constants.sp1.reset();
+//        for (int i = 0; i < numloops; i++) {
+        if (Constants.transmit) {
+            id=newpulse(0);
+            Constants.sp1 = new AudioSpeaker(av, id, Constants.SamplingRate, -1, 0, false);
+            Constants.sp1.play(Constants.scale2);
         }
+//            Log.e("asdf","loop "+i);
+
+        try {
+            Log.e("asdf", "sleep for " + (stime));
+            Thread.sleep((long) stime*numloops);
+        } catch (Exception e) {
+            Log.e("asdf", e.getMessage());
+        }
+//
+//            int finalI = i;
+//            (MainActivity.av).runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (finalI %2==0) {
+//                        Constants.clayout.setBackgroundColor(Color.argb(255, 255, 0, 0));
+//                    }
+//                    else {
+//                        if (Build.MODEL.equals("Pixel 3a XL")) {
+//                            Constants.clayout.setBackgroundColor(Color.argb(255, 0, 0, 0));
+//                        }
+//                        else {
+//                            Constants.clayout.setBackgroundColor(Color.argb(255, 255, 255, 255));
+//                        }
+//                    }
+//                }
+//            });
+//            Constants.sp1.reset();
+//        }
 
 //        try {
 //            int stime = (pulse_length/Constants.SamplingRate)*1000;
