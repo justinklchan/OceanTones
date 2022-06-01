@@ -470,7 +470,7 @@ public class SendChirpAsyncTask extends AsyncTask<Void, Void, Void> {
         int stime = (int) ((Constants.pulse.length / (double) Constants.SamplingRate) * 1000);
 //        int glen=(int)(Constants.gap_len*Constants.SamplingRate);
         int numloops = (int)(Constants.tone_len/(stime/1000.0));
-                Constants.sp1 = new AudioSpeaker(av, Constants.pulse, Constants.SamplingRate, 0, 0, false);
+                Constants.sp1 = new AudioSpeaker(av, Constants.pulse, Constants.SamplingRate, -1, Constants.pulse.length, false);
 //            }
 //        }
 

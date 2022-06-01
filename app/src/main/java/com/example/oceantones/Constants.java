@@ -939,6 +939,18 @@ public class Constants {
             tv2.setText("signal_1260_480_1000_5000");
             Constants.mode="ofdm";
         }
+        if (Constants.file_num==116) {
+            short[] pre = FileOperations.readrawasset_binary(context, R.raw.sounding);
+            int gap_len=(int)(Constants.gap_len*Constants.SamplingRate);
+            Constants.pulse = new short[pre.length+gap_len];
+
+            int counter=0;
+            for (int i = 0; i < pre.length; i++) {
+                Constants.pulse[i] = pre[counter++];
+            }
+            tv2.setText("sounding signal");
+            Constants.mode="ofdm";
+        }
 //        if (Constants.file_num==53) {
 //            Constants.pulse = FileOperations.readrawasset(context, R.raw.short2);
 //            Constants.mode="ofdm";
