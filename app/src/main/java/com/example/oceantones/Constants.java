@@ -935,8 +935,8 @@ public class Constants {
             Constants.mode="ofdm";
         }
         if (Constants.file_num==115) {
-            Constants.pulse = Chirp.generateChirpSpeaker(1000, 16000, .01, 44100, 0, Constants.scale1);
-            tv2.setText("signal_1260_480_1000_5000");
+            Constants.pulse = Chirp.generateChirpSpeaker(1000, 10000, .1, 44100, 0, Constants.scale1);
+            tv2.setText("signal_1260_480_1000_10000");
             Constants.mode="ofdm";
         }
         if (Constants.file_num==116) {
